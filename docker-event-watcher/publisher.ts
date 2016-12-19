@@ -10,7 +10,9 @@ class Publisher {
     this.client = redis.createClient({ host: 'redis' });
   }
 
-  publishMessage(message : DeploymentUpdateEvent) {
+  publishMessage(payload : DeploymentUpdateEvent) {
+    const type = "DeploymentUpdateEvent";
+    const message = { type, payload };
     this.client.publish(CHANNEL_NAME, JSON.stringify(message));
   }
 
