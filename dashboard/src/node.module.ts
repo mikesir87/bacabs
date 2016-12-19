@@ -10,6 +10,8 @@ import { CacheService } from './+app/shared/cache.service';
 // Will be merged into @angular/platform-browser in a later release
 // see https://github.com/angular/angular/pull/12322
 import { Meta } from './angular2-meta';
+import {StoreModule} from "@ngrx/store";
+import {reducer} from "./+app/reducers/index";
 
 export function getLRU() {
   return new Map();
@@ -32,6 +34,7 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
     FormsModule,
     RouterModule.forRoot([], { useHash: false }),
+    StoreModule.provideStore(reducer),
 
     SharedModule.forRoot(),
     AppModule,
