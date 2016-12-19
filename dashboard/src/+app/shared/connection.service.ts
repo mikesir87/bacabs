@@ -34,10 +34,7 @@ export class ConnectionService {
             this.webSocket.onmessage = this.onMessage.bind(this);
         }
 
-        this.wsEventListener = Observable.create((observer) => {
-          this.wsEventObserver = observer;
-          console.log("Observer set");
-        });
+        this.wsEventListener = Observable.create((observer) => this.wsEventObserver = observer);
     }
 
     isConnected() : Observable<Boolean> {
