@@ -4,7 +4,7 @@ export interface Deployment {
   url: string;
   creationTime: number;
   status: 'UP' | 'DOWN' | 'UNKNOWN';
-  issueDetails?: IssueDetails;
+  issue?: IssueDetails;
   lastCommit?: LastCommit;
 }
 
@@ -16,6 +16,7 @@ export interface LastCommit {
 
 export interface IssueDetails {
   identifier: string;
+  url?: string;
   summary?: string;
   acceptanceTesting?: boolean;
 }

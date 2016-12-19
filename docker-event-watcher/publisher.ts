@@ -12,8 +12,9 @@ class Publisher {
 
   publishMessage(payload : DeploymentUpdateEvent) {
     const type = "DeploymentUpdateEvent";
-    const message = { type, payload };
-    this.client.publish(CHANNEL_NAME, JSON.stringify(message));
+    const message = JSON.stringify({ type, payload });
+    console.log(message);
+    this.client.publish(CHANNEL_NAME, message);
   }
 
 }

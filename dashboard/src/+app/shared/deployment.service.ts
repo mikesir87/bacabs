@@ -14,7 +14,7 @@ export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
   name : string;
   url : string;
-  issue : string;
+  issueDetails : { identifier : string, url : string };
 }
 
 @Injectable()
@@ -35,13 +35,7 @@ export class DeploymentService {
     }
 
     private processEvent(event : DeploymentUpdateEvent) {
-      const deployment : Deployment = {
-        url : event.url,
-        name : event.name,
-        status : event.status,
-        creationTime : (new Date()).getTime(),
-        issueDetails : { identifier : event.issue }
-      };
+      const deployment : Deployment = Object.assign({}, event, { creationTime : (new Date()).getTime() });
       this.store.dispatch({ type : Actions.UPDATE_DEPLOYMENT, payload: deployment });
     }
 }

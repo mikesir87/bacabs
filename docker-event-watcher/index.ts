@@ -7,7 +7,7 @@ let options = {
   filters: {
     type: ['container'],
     event: ['create', 'destroy'],
-    label: ['deployment.url', 'deployment.issue', 'deployment.name']
+    label: ['deployment.url', 'deployment.issue.identifier', 'deployment.name']
   }
 };
 
@@ -23,7 +23,10 @@ dockerClient.getEvents(options, function(err, stream) {
       name : attributes['deployment.name'],
       status : (data.Action == 'create') ? 'UP' : 'DOWN',
       url : attributes['deployment.url'],
-      issue : attributes['deployment.issue']
+      issue : {
+        identifier: attributes['deployment.issue.identifier'],
+        url : attributes['deployment.issue.url']
+      }
     };
     publisher.publishMessage(message);
   });

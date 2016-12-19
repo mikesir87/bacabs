@@ -24,8 +24,10 @@ import {Deployment} from "../deployment";
               <a [href]="deployment.url" target="_blank">{{ deployment.name }}</a>
               <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
             </td>
-            <td>{{ deployment.issueDetails.identifier }}</td>
-            <td>{{ deployment.issueDetails.summary || '--' }}</td>
+            <td>
+              <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
+            </td>
+            <td>{{ deployment.issue.summary || '--' }}</td>
           </tr>
         </tbody>
       </table>
