@@ -1,0 +1,17 @@
+{
+  "name": "docker-event-watcher",
+  "version": "1.0.0",
+  "description": "Component that listens for Docker events for new containers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc index.ts && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dockerode-ts": "^0.3.2",
+    "redis": "^2.6.3",
+    "typescript": "^2.1.4"
+  }
+}
