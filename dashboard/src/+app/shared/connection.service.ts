@@ -10,12 +10,18 @@ import { ReconnectingWebSocket } from './ReconnectingWebsocket';
 import {State} from "../reducers/index";
 import {Store} from "@ngrx/store";
 import {Actions, ConnectionState} from "../reducers/connection";
+import {Observer} from "rxjs";
 
+export interface IncomingEvent {
+  type: string;
+  payload: any;
+}
 
 @Injectable()
 export class ConnectionService {
 
-    private connectionObservable : Observable<Boolean>;
+    private wsEventListener : Observable<IncomingEvent>;
+    private wsEventObserver : Observer<IncomingEvent>;
     private webSocket : ReconnectingWebSocket;
 
     constructor(private store: Store<State>) {
@@ -27,12 +33,21 @@ export class ConnectionService {
             this.webSocket.onclose = this.onClose.bind(this);
             this.webSocket.onmessage = this.onMessage.bind(this);
         }
+
+        this.wsEventListener = Observable.create((observer) => {
+          this.wsEventObserver = observer;
+          console.log("Observer set");
+        });
     }
 
     isConnected() : Observable<Boolean> {
-        return this.connectionObservable = this.store.select('connection')
+        return this.store.select('connection')
           .map(state => state as ConnectionState)
           .map(state => state.connected);
+    }
+
+    getEvents() : Observable<IncomingEvent> {
+      return this.wsEventListener;
     }
 
     private onOpen() {
@@ -47,5 +62,6 @@ export class ConnectionService {
 
     private onMessage(messageData : MessageEvent) {
         console.log("Message received", messageData.data);
+        this.wsEventObserver.next(JSON.parse(messageData.data) as IncomingEvent);
     }
 }

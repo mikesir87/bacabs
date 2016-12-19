@@ -5,7 +5,7 @@ import * as fromDeployments from './deployments';
 
 export interface State {
   connection : fromConnection.ConnectionState,
-  deployments : fromDeployments.State
+  deployments : fromDeployments.DeploymentState
 }
 
 const reducers = {
