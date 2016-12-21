@@ -67,6 +67,7 @@ app.use(cacheControl, express.static(path.join(ROOT, 'dist/client'), {index: fal
 // ** Example API
 // Notice API should be in aseparate process
 import { serverApi, createTodoApi } from './backend/api';
+import {RedisListener} from "./backend/redis-listener";
 // Our API for demos only
 app.get('/data.json', serverApi);
 app.use('/api', createTodoApi());
@@ -109,18 +110,9 @@ let server = app.listen(app.get('port'), () => {
 
 ///////////////////
 
-var wss = new WebSocket.Server({server: server, path : "/events", perMessageDeflate: false});
+const wss = new WebSocket.Server({server: server, path : "/events", perMessageDeflate: false});
+new RedisListener(wss);
 
 wss.on("connection", function(ws){
-   console.log("GOT A NEW CONNECTION!!");
+   console.log("-- A new user has connected");
 });
-
-import * as redis from 'redis';
-var sub = redis.createClient({ host: 'redis' });
-sub.on("message", function (channel, message) {
-    wss.clients.forEach(function each(client) {
-      client.send(message);
-    });
-});
-
-sub.subscribe("deployments");

@@ -18,3 +18,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./docker-event-watcher:/app
+  gitlab-webhook-receiver:
+    build:
+      context: ./gitlab-webhook-receiver/
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./gitlab-webhook-receiver:/app
+    ports:
+      - 8080:80

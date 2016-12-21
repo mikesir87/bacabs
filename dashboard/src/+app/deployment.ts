@@ -12,6 +12,7 @@ export interface LastCommit {
   date: number;
   author: string;
   ref: string;
+  summary: string;
 }
 
 export interface IssueDetails {
