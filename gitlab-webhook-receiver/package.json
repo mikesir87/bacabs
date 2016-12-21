@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc index.ts && node index.js"
+    "start": "nodemon --watch '**/*.ts' --exec 'tsc index.ts && node index.js'"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +14,8 @@
     "express": "^4.14.0",
     "redis": "^2.6.3",
     "typescript": "^2.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

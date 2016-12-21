@@ -4,5 +4,8 @@
     "dockerode": "registry:npm/dockerode#2.3.1+20161017101347",
     "express": "registry:npm/express#4.14.0+20160925001530",
     "redis": "registry:npm/redis#2.6.0+20160901110043"
+  },
+  "globalDependencies": {
+    "node": "registry:env/node#6.0.0+20161105011511"
   }
 }

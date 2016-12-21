@@ -3,7 +3,11 @@ import { SourceCodeUpdateEvent } from './event';
 
 const CHANNEL_NAME = "cvs-updates";
 
-class Publisher {
+export interface Publisher {
+  publishMessage(payload : SourceCodeUpdateEvent) : void;
+}
+
+class DefaultPublisher implements Publisher {
   private client : redis.RedisClient;
 
   constructor() {
@@ -19,4 +23,4 @@ class Publisher {
 
 }
 
-export const publisher = new Publisher();
+export const PUBLISHER = new DefaultPublisher();
