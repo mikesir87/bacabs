@@ -1,6 +1,10 @@
 version: '2'
 
 services:
+  shared:
+    image: tianon/true
+    volumes:
+      - ./shared:/shared
   redis:
     image: redis:3.0
   dashboard:
@@ -11,6 +15,8 @@ services:
       - 80:3000
     volumes:
       - ./dashboard:/app
+    volumes_from:
+      - shared
   docker-event-watcher:
     build:
       context: ./docker-event-watcher/
@@ -18,6 +24,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./docker-event-watcher:/app
+    volumes_from:
+      - shared
   gitlab-webhook-receiver:
     build:
       context: ./gitlab-webhook-receiver/
@@ -26,3 +34,5 @@ services:
       - ./gitlab-webhook-receiver:/app
     ports:
       - 8080:80
+    volumes_from:
+      - shared

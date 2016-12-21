@@ -1,3 +1,9 @@
+export interface SourceCodeUpdateEvent {
+  date: number;
+  author: string;
+  ref: string;
+  summary: string;
+}
 
 export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
@@ -10,3 +16,4 @@ export interface IssueDetails {
   identifier : string;
   url : string;
 }
+

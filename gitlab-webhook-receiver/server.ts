@@ -4,7 +4,7 @@ import {Publisher, PUBLISHER} from "./publisher";
 import {tokenValidator} from "./token-validator";
 import {ParsedAsJson} from "body-parser";
 import {GitLabPushEvent} from "./typings/local/gitlab-push-model";
-import {SourceCodeUpdateEvent} from "./event";
+import {SourceCodeUpdateEvent} from "../shared/events";
 
 export class Server {
 

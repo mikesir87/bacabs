@@ -1,5 +1,5 @@
 import * as redis from 'redis';
-import { SourceCodeUpdateEvent } from './event';
+import { SourceCodeUpdateEvent } from '../shared/events';
 
 const CHANNEL_NAME = "cvs-updates";
 

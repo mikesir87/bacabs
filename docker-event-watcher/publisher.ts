@@ -1,5 +1,5 @@
 import * as redis from 'redis';
-import { DeploymentUpdateEvent } from './event';
+import { DeploymentUpdateEvent } from '../shared/events';
 
 const CHANNEL_NAME = "deployments";
 

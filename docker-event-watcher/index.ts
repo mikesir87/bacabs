@@ -1,7 +1,7 @@
 import Dockerode from 'dockerode-ts';
 const dockerClient = new Dockerode();
 import { publisher } from './publisher';
-import { DeploymentUpdateEvent } from "./event";
+import { DeploymentUpdateEvent } from "../shared/events";
 
 let options = {
   filters: {

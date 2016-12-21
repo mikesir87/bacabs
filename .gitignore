@@ -20,3 +20,5 @@ webpack.records.json
 morgan.log
 
 ts-node
+
+*.js
