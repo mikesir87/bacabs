@@ -1,3 +1,9 @@
+
+export const CHANNELS = {
+  VCS_UPDATES : "vcs-updates",
+  DEPLOYMENTS : "deployment-updates"
+};
+
 export interface SourceCodeUpdateEvent {
   date: number;
   author: string;
@@ -16,4 +22,3 @@ export interface IssueDetails {
   identifier : string;
   url : string;
 }
-

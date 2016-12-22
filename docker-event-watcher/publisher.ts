@@ -1,7 +1,5 @@
 import * as redis from 'redis';
-import { DeploymentUpdateEvent } from '../shared/events';
-
-const CHANNEL_NAME = "deployments";
+import {DeploymentUpdateEvent, CHANNELS} from '../shared/events';
 
 class Publisher {
   private client : redis.RedisClient;
@@ -11,10 +9,9 @@ class Publisher {
   }
 
   publishMessage(payload : DeploymentUpdateEvent) {
-    const type = "DeploymentUpdateEvent";
-    const message = JSON.stringify({ type, payload });
+    const message = JSON.stringify(payload);
     console.log(message);
-    this.client.publish(CHANNEL_NAME, message);
+    this.client.publish(CHANNELS.DEPLOYMENTS, message);
   }
 
 }

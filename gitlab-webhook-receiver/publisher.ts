@@ -1,7 +1,5 @@
 import * as redis from 'redis';
-import { SourceCodeUpdateEvent } from '../shared/events';
-
-const CHANNEL_NAME = "cvs-updates";
+import {SourceCodeUpdateEvent, CHANNELS} from '../shared/events';
 
 export interface Publisher {
   publishMessage(payload : SourceCodeUpdateEvent) : void;
@@ -15,10 +13,9 @@ class DefaultPublisher implements Publisher {
   }
 
   publishMessage(payload : SourceCodeUpdateEvent) {
-    const type = "SourceCodeUpdateEvent";
-    const message = JSON.stringify({ type, payload });
+    const message = JSON.stringify(payload);
     console.log(message);
-    this.client.publish(CHANNEL_NAME, message);
+    this.client.publish(CHANNELS.VCS_UPDATES, message);
   }
 
 }
