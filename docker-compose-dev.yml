@@ -5,19 +5,37 @@ services:
     image: tianon/true
     volumes:
       - ./shared:/shared
+
   redis:
     image: redis:3.0
+
+  traefik:
+    image: traefik
+    command: --web --docker --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+
   dashboard:
     build:
       context: ./dashboard/
       dockerfile: Dockerfile-dev
     ports:
-      - 80:3000
+      - 3000:3000
     volumes:
       - ./dashboard:/app
+      - ./shared:/shared
     volumes_from:
       - shared
-  docker-event-watcher:
+    labels:
+      - "traefik.backend=bacabs"
+      - "traefik.frontend.rule=Host:bacabs.docker.localhost"
+      - "traefik.port=3000"
+
+  docker:
     build:
       context: ./docker-event-watcher/
       dockerfile: Dockerfile-dev
@@ -26,13 +44,16 @@ services:
       - ./docker-event-watcher:/app
     volumes_from:
       - shared
-  gitlab-webhook-receiver:
+
+  gitlab:
     build:
       context: ./gitlab-webhook-receiver/
       dockerfile: Dockerfile-dev
     volumes:
       - ./gitlab-webhook-receiver:/app
-    ports:
-      - 8080:80
     volumes_from:
       - shared
+    labels:
+      - "traefik.backend=gitlab"
+      - "traefik.frontend.rule=Host:gitlab.docker.localhost"
+      - "traefik.port=80"

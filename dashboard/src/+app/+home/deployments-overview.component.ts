@@ -16,6 +16,7 @@ import {Deployment} from "../../../../shared/deployment.model";
             <th>Name</th>
             <th>Issue</th>
             <th>Summary</th>
+            <th>Last Code Update</th>
           </tr>
         </thead>
         <tbody>
@@ -28,6 +29,14 @@ import {Deployment} from "../../../../shared/deployment.model";
               <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
             </td>
             <td>{{ deployment.issue.summary || '--' }}</td>
+            <td>
+              <span *ngIf="deployment.lastCommit.date">
+                {{ (deployment.lastCommit.date / 1000 | amFromUnix) | amDateFormat:'llll' }} by {{ deployment.lastCommit.author }}
+              </span>
+              <span *ngIf="!deployment.lastCommit.date">
+                <em>Unknown</em>
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>

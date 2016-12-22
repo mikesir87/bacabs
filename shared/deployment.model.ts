@@ -5,14 +5,14 @@ export interface Deployment {
   creationTime: number;
   status: 'UP' | 'DOWN' | 'UNKNOWN';
   issue?: IssueDetails;
-  lastCommit?: LastCommit;
+  lastCommit: LastCommit;
 }
 
 export interface LastCommit {
-  date: number;
-  author: string;
+  date?: number;
+  author?: string;
   ref: string;
-  summary: string;
+  summary?: string;
 }
 
 export interface IssueDetails {

@@ -10,11 +10,16 @@ import * as WebSocket from 'ws';
 import {RedisListener} from "./backend/redis-listener";
 import {DeploymentService} from "./backend/deployment-service";
 import {AppServer} from "./backend/app-server";
+import {ApiRoutes} from "./backend/api";
 
-const deploymentService = new DeploymentService();
-const server = AppServer.start(process.env.PORT || 3000, deploymentService);
-const wss = new WebSocket.Server({server: server, path : "/events", perMessageDeflate: false});
-new RedisListener(wss, deploymentService);
+const appServer = AppServer.start(process.env.PORT || 3000);
+const wss = new WebSocket.Server({server: appServer.server, path : "/events", perMessageDeflate: false});
+
+const deploymentService = new DeploymentService(wss);
+const apiRoutes = new ApiRoutes(deploymentService);
+appServer.registerApiRoutes(apiRoutes.getRouter());
+
+new RedisListener(deploymentService);
 
 wss.on("connection", function(ws) {
    console.log("-- A new user has connected");

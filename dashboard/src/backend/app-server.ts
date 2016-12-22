@@ -16,21 +16,21 @@ import { MainModule } from '../node.module';
 
 // Routes
 import { routes } from '../server.routes';
-import {DeploymentService} from "./deployment-service";
 
 const ROOT = path.join(path.resolve(__dirname, '..'));
 
 export class AppServer {
   app : express.Application;
+  server : http.Server;
 
-  static start(port : number, deploymentService : DeploymentService) : http.Server {
+  static start(port : number) : AppServer {
     if (process.env.NODE_ENV == 'production')
       enableProdMode();
 
     const server = new AppServer();
-    const httpServer = server.app.listen(port);
+    server.server = server.app.listen(port);
     console.log(`Server is now listening to port ${port}`);
-    return httpServer;
+    return server;
   }
 
   constructor() {
@@ -69,13 +69,10 @@ export class AppServer {
       this.app.get(`/${route}/*`, this.ngApp.bind(this));
     });
 
-    this.app.get('*', function(req, res) {
-      res.setHeader('Content-Type', 'application/json');
-      let pojo = { status: 404, message: 'No Content' };
-      let json = JSON.stringify(pojo, null, 2);
-      res.status(404).send(json);
-    });
+  }
 
+  registerApiRoutes(router : express.Router) {
+    this.app.use('/api', router);
   }
 
   ngApp(req : express.Request, res : express.Response) {

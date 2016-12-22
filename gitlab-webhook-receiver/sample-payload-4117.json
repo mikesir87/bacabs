@@ -1,0 +1,120 @@
+{
+  "object_kind":"push",
+  "event_name":"push",
+  "before":"3cf82c4bdd0f003455886f9b2f1dd32c8cad3f73",
+  "after":"d8b0de9d79b8388a263898885505cd6fa6e46c2c",
+  "ref":"refs/heads/CREST-4117",
+  "checkout_sha":"d8b0de9d79b8388a263898885505cd6fa6e46c2c",
+  "message":null,
+  "user_id":18,
+  "user_name":"Michael Irwin",
+  "user_email":"mikesir@vt.edu",
+  "user_avatar":"https://secure.gravatar.com/avatar/3e6cacf627399f4c54b63bc7f749a1f3?s=80\u0026d=identicon",
+  "project_id":284,
+  "project":{
+    "name":"summit",
+    "description":"Summit research enterprise administration system.",
+    "web_url":"https://git.it.vt.edu/crest/summit",
+    "avatar_url":null,
+    "git_ssh_url":"git@git.it.vt.edu:crest/summit.git",
+    "git_http_url":"https://git.it.vt.edu/crest/summit.git",
+    "namespace":"CREST",
+    "visibility_level":0,
+    "path_with_namespace":"crest/summit",
+    "default_branch":"qa",
+    "homepage":"https://git.it.vt.edu/crest/summit",
+    "url":"git@git.it.vt.edu:crest/summit.git",
+    "ssh_url":"git@git.it.vt.edu:crest/summit.git",
+    "http_url":"https://git.it.vt.edu/crest/summit.git"
+  },
+  "commits":[
+    {
+      "id":"d8b0de9d79b8388a263898885505cd6fa6e46c2c",
+      "message":"Merge branch 'CREST-4142' into 'qa'\r\n\r\nCrest 4142\r\n\r\n\r\n\r\nSee merge request !259",
+      "timestamp":"2016-12-16T16:37:57-05:00",
+      "url":"https://git.it.vt.edu/crest/summit/commit/d8b0de9d79b8388a263898885505cd6fa6e46c2c",
+      "author":{
+        "name":"Michael Irwin",
+        "email":"mikesir@vt.edu"
+      },
+      "added":[
+        "summit-denali/src/main/ui/app/controllers/PT_MainMenuController.spec.js"
+      ],
+      "modified":[
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/api/ProposalRepository.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/decorator/proposal/ProposalRepositoryDecorator.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/proposal/JpaProposalRepository.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalService.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalServiceBean.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalsResource.java",
+        "summit-denali/src/main/resources/META-INF/orm.xml",
+        "summit-denali/src/main/ui/app/controllers/PT_MainMenuController.js",
+        "summit-denali/src/main/ui/app/services/ProposalSummaryService.js",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/repository/proposal/JpaProposalRepositoryIT.java",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalServiceBeanTest.java"
+      ],
+      "removed":[
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/PrincipalInvestigatorResourceBean.java",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/web/rest/proposal/PrincipalInvestigatorResourceBeanTest.java"
+      ]
+    },
+    {
+      "id":"55c372b6a24b71a992bb9514d9dc812ce423fc1a",
+      "message":"Removed /proposals/principalInvestigators resource\n\nCREST-4142\n",
+      "timestamp":"2016-12-16T12:33:03-05:00",
+      "url":"https://git.it.vt.edu/crest/summit/commit/55c372b6a24b71a992bb9514d9dc812ce423fc1a",
+      "author":{
+        "name":"Michael Irwin",
+        "email":"mikesir87@gmail.com"
+      },
+      "added":[
+
+      ],
+      "modified":[
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/api/ProposalRepository.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/decorator/proposal/ProposalRepositoryDecorator.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/repository/proposal/JpaProposalRepository.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalService.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalServiceBean.java",
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalsResource.java",
+        "summit-denali/src/main/resources/META-INF/orm.xml",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/repository/proposal/JpaProposalRepositoryIT.java",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/web/rest/proposal/ProposalServiceBeanTest.java"
+      ],
+      "removed":[
+        "summit-denali/src/main/java/edu/vt/research/summit/denali/web/rest/proposal/PrincipalInvestigatorResourceBean.java",
+        "summit-denali/src/test/java/edu/vt/research/summit/denali/web/rest/proposal/PrincipalInvestigatorResourceBeanTest.java"
+      ]
+    },
+    {
+      "id":"3cf82c4bdd0f003455886f9b2f1dd32c8cad3f73",
+      "message":"Fixed PI folder display\n\nCREST-4142\n",
+      "timestamp":"2016-12-16T12:23:19-05:00",
+      "url":"https://git.it.vt.edu/crest/summit/commit/3cf82c4bdd0f003455886f9b2f1dd32c8cad3f73",
+      "author":{
+        "name":"Michael Irwin",
+        "email":"mikesir87@gmail.com"
+      },
+      "added":[
+        "summit-denali/src/main/ui/app/controllers/PT_MainMenuController.spec.js"
+      ],
+      "modified":[
+        "summit-denali/src/main/ui/app/controllers/PT_MainMenuController.js",
+        "summit-denali/src/main/ui/app/services/ProposalSummaryService.js"
+      ],
+      "removed":[
+
+      ]
+    }
+  ],
+  "total_commits_count":3,
+  "repository":{
+    "name":"summit",
+    "url":"git@git.it.vt.edu:crest/summit.git",
+    "description":"Summit research enterprise administration system.",
+    "homepage":"https://git.it.vt.edu/crest/summit",
+    "git_http_url":"https://git.it.vt.edu/crest/summit.git",
+    "git_ssh_url":"git@git.it.vt.edu:crest/summit.git",
+    "visibility_level":0
+  }
+}

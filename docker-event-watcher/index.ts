@@ -7,7 +7,11 @@ let options = {
   filters: {
     type: ['container'],
     event: ['create', 'destroy'],
-    label: ['deployment.url', 'deployment.issue.identifier', 'deployment.name']
+    label: [
+      'deployment.name', 'deployment.url',
+      'deployment.issue.identifier', 'deployment.issue.url',
+      'deployment.vcs.ref'
+    ]
   }
 };
 
@@ -26,6 +30,9 @@ dockerClient.getEvents(options, function(err, stream) {
       issue : {
         identifier: attributes['deployment.issue.identifier'],
         url : attributes['deployment.issue.url']
+      },
+      lastCommit : {
+        ref : attributes['deployment.vcs.ref'],
       }
     };
     publisher.publishMessage(message);

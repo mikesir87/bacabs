@@ -7,7 +7,7 @@ export class RedisListener {
 
   private redisClient : redis.RedisClient;
 
-  constructor(private webSocketServer : WebSocket.Server, private deploymentService : DeploymentService) {
+  constructor(private deploymentService : DeploymentService) {
     this.redisClient = redis.createClient({ host : 'redis' });
     this._init();
   }
@@ -17,9 +17,9 @@ export class RedisListener {
       const data = JSON.parse(message);
       switch (channel) {
         case CHANNELS.DEPLOYMENTS:
-          return this.processDeployment(data as DeploymentUpdateEvent);
+          return this.deploymentService.processDeployment(data as DeploymentUpdateEvent);
         case CHANNELS.VCS_UPDATES:
-          return this.processVcsUpdate(data as SourceCodeUpdateEvent);
+          return this.deploymentService.processVcsUpdate(data as SourceCodeUpdateEvent);
         default:
           console.log("Unknown message", channel, data);
       }
@@ -28,11 +28,4 @@ export class RedisListener {
     Object.keys(CHANNELS).forEach(key => this.redisClient.subscribe(CHANNELS[key]));
   }
 
-  private processDeployment(event : DeploymentUpdateEvent) {
-    console.log("Received deployemnt update event", event);
-  }
-
-  private processVcsUpdate(event : SourceCodeUpdateEvent) {
-    console.log("Received vcs update event", event);
-  }
 }

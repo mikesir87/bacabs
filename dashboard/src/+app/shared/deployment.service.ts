@@ -8,6 +8,7 @@ import {Actions, DeploymentState} from "../reducers/deployments";
 import { Store } from "@ngrx/store";
 import { State } from "../reducers";
 import {Deployment} from "../../../../shared/deployment.model";
+import {SourceCodeUpdateEvent} from "../../../../shared/events";
 
 
 export interface DeploymentUpdateEvent {
@@ -22,9 +23,10 @@ export class DeploymentService {
 
     constructor(private connectionService : ConnectionService,
         private store : Store<State>) {
+
       this.connectionService.getEvents()
-        .filter(message => message.type == 'DeploymentUpdateEvent')
-        .map(message => message.payload as DeploymentUpdateEvent)
+        .filter(message => message.type == 'DeploymentUpdatedEvent')
+        .map(message => message.payload as Deployment)
         .subscribe(event => this.processEvent(event));
     }
 
@@ -34,8 +36,15 @@ export class DeploymentService {
         .map(state => state.deployments);
     }
 
-    private processEvent(event : DeploymentUpdateEvent) {
-      const deployment : Deployment = Object.assign({}, event, { creationTime : (new Date()).getTime() });
+    private processEvent(deployment : Deployment) {
       this.store.dispatch({ type : Actions.UPDATE_DEPLOYMENT, payload: deployment });
+    }
+
+    private processDeployment(event : DeploymentUpdateEvent) {
+      console.log("Received deployemnt update event", event);
+    }
+
+    private processVcsUpdate(event : SourceCodeUpdateEvent) {
+      console.log("Received vcs update event", event);
     }
 }

@@ -9,7 +9,6 @@ import {SourceCodeUpdateEvent} from "../shared/events";
 export class Server {
 
   app: express.Application;
-  refMatcher = new RegExp("refs/heads/(\\w+)");
   publisher : Publisher;
 
   static start(port : number, gitlabValidationToken? : string) {
@@ -32,13 +31,12 @@ export class Server {
     if (gitlabEvent == null || gitlabEvent == undefined)
       return console.log("Received notification without body");
 
-    let ref = gitlabEvent.ref.match(this.refMatcher);
-    if (ref == null || ref.length != 2) {
-      return;
+    if (gitlabEvent.commits.length == 0) {
+      return console.log("Got event with no commits in it");
     }
 
     let sourceCodeEvent : SourceCodeUpdateEvent = {
-      ref: ref[1],
+      ref: gitlabEvent.ref,
       date: (new Date(gitlabEvent.commits[0].timestamp)).getTime(),
       author: gitlabEvent.commits[0].author.name,
       summary: gitlabEvent.commits[0].message
