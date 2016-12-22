@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {DeploymentService} from "../shared/deployment.service";
-import {Deployment} from "../deployment";
+import {Deployment} from "../../../../shared/deployment.model";
 import {Observable} from "rxjs";
 
 @Component({

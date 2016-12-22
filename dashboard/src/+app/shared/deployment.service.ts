@@ -7,7 +7,7 @@ import { ConnectionService } from "./connection.service";
 import {Actions, DeploymentState} from "../reducers/deployments";
 import { Store } from "@ngrx/store";
 import { State } from "../reducers";
-import {Deployment} from "../deployment";
+import {Deployment} from "../../../../shared/deployment.model";
 
 
 export interface DeploymentUpdateEvent {

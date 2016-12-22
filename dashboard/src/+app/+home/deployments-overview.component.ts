@@ -1,5 +1,5 @@
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {Deployment} from "../deployment";
+import {Deployment} from "../../../../shared/deployment.model";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

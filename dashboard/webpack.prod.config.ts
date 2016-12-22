@@ -132,7 +132,7 @@ export const clientPlugins = [
 
 ];
 export const clientConfig = {
-  entry: './src/client.aot',
+  entry: './src/index.client.aot',
   recordsOutputPath: root('webpack.records.json')
 };
 
@@ -161,7 +161,7 @@ export const serverPlugins = [
   }),
 ];
 export const serverConfig = {
-  entry: './src/server.aot',
+  entry: './src/index.server.aot',
   output: {
     filename: 'index.js',
     chunkFilename: '[id].bundle.js',

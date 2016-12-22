@@ -52,7 +52,7 @@ export var clientPlugins = [
 ];
 export var clientConfig = {
   target: 'web',
-  entry: './src/client',
+  entry: './src/index.client',
   output: {
     path: root('dist/client')
   },
@@ -73,7 +73,7 @@ export var serverPlugins = [
 ];
 export var serverConfig = {
   target: 'node',
-  entry: './src/server', // use the entry file of the node server if everything is ts rather than es5
+  entry: './src/index.server', // use the entry file of the node server if everything is ts rather than es5
   output: {
     filename: 'index.js',
     path: root('dist/server'),

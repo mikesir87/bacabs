@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Deployment } from '../deployment';
+import { Deployment } from '../../../../shared/deployment.model';
 
 export interface DeploymentState {
   deployments: Deployment[];
