@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "sourceMap": true,
-    "sourceRoot": "src",
     "noEmitHelpers": true,
     "target": "es5",
     "typeRoots": [

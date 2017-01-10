@@ -1,0 +1,11 @@
+
+app:
+  image: nginx
+  labels:
+    - "deployment.name=CREST-4117"
+    - "deployment.url=https://crest-4117.docker.localhost/"
+    - "deployment.issue.identifier=CREST-4117"
+    - "deployment.issue.url=https://webapps.es.vt.edu/jira/browse/CREST-4117"
+    - "deployment.vcs.ref=refs/heads/CREST-4117"
+    - "traefik.backend=crest-4117"
+    - "traefik.frontend.rule=Host:crest-4117.docker.localhost"

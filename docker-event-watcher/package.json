@@ -5,12 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc index.ts && node index.js"
+    "dev": "concurrently 'npm run watch' 'npm run serve'",
+    "serve": "nodemon --watch dist dist/app/index.js",
+    "start": "tsc index.ts && node index.js",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^3.1.0",
     "dockerode-ts": "^0.3.2",
+    "nodemon": "^1.11.0",
     "redis": "^2.6.3",
     "typescript": "^2.1.4"
   }
