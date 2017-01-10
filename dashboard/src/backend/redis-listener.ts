@@ -14,6 +14,7 @@ export class RedisListener {
 
   _init() {
     this.redisClient.on("message", function (channel, message) {
+      console.log("Received message", channel, message);
       const data = JSON.parse(message);
       switch (channel) {
         case CHANNELS.DEPLOYMENTS:

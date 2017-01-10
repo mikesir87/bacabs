@@ -22,8 +22,10 @@ export class DeploymentService {
     const deploymentIndex = this.deployments.findIndex(d => d.name == event.name);
     let newDeployment : Deployment = null;
     if (deploymentIndex == -1) {
-      if (event.status == 'DOWN') // Don't care about those we haven't seen that are dying
+      if (event.status == 'DOWN') { // Don't care about those we haven't seen that are dying
+        console.log("Ignoring message - unrecognized dying container");
         return;
+      }
       newDeployment = Object.assign({}, event, { creationTime : (new Date()).getTime()} );
       this.deployments = [...this.deployments, newDeployment];
     }
@@ -53,8 +55,10 @@ export class DeploymentService {
 
   private notifySubscribersOfUpdate(deployment : Deployment) {
     const updateModel = { type : "DeploymentUpdatedEvent", payload : deployment };
+    const modelAsString = JSON.stringify(updateModel);
+    console.log("Sending update model", modelAsString);
     this.webSocketServer.clients.forEach(client =>
-      client.send(JSON.stringify(updateModel))
+      client.send(modelAsString)
     );
   }
 }
