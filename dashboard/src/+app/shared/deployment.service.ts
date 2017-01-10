@@ -9,6 +9,8 @@ import { Store } from "@ngrx/store";
 import { State } from "../reducers";
 import {Deployment} from "../../../../shared/deployment.model";
 import {SourceCodeUpdateEvent} from "../../../../shared/events";
+import {Http} from "@angular/http";
+import {isBrowser} from "angular2-universal";
 
 
 export interface DeploymentUpdateEvent {
@@ -22,7 +24,12 @@ export interface DeploymentUpdateEvent {
 export class DeploymentService {
 
     constructor(private connectionService : ConnectionService,
-        private store : Store<State>) {
+        private store : Store<State>,
+        private http : Http) {
+
+      if (isBrowser) {
+        this._updateDeployments();
+      }
 
       this.connectionService.getEvents()
         .filter(message => message.type == 'DeploymentUpdatedEvent')
@@ -47,4 +54,11 @@ export class DeploymentService {
     private processVcsUpdate(event : SourceCodeUpdateEvent) {
       console.log("Received vcs update event", event);
     }
+
+    private _updateDeployments() {
+      this.http.get('/api/deployments')
+          .map(response => response.json())
+          .subscribe(deployments => this.store.dispatch({ type: Actions.SET_DEPLOYMENTS, payload: deployments }));
+    }
+
 }
