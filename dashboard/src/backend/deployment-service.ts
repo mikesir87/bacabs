@@ -2,6 +2,7 @@
 import {Deployment} from "../../../shared/deployment.model";
 import {DeploymentUpdateEvent, SourceCodeUpdateEvent} from "../../../shared/events";
 import WebSocket = require("ws");
+import * as redis from "redis";
 
 export interface Notifier {
   notify(event : any);
@@ -10,9 +11,20 @@ export interface Notifier {
 
 export class DeploymentService {
 
-  deployments : Deployment[] = [];
+  private redisClient : redis.RedisClient;
+  private deployments : Deployment[] = [];
 
-  constructor(private webSocketServer : WebSocket.Server) {}
+  constructor(private webSocketServer : WebSocket.Server) {
+    this.redisClient = redis.createClient({ host : 'redis' });
+    this._fetchDeployments();
+  }
+
+  private _fetchDeployments() {
+    this.redisClient.get("deployments", (err, reply) => {
+      if (err) return console.error(err.message, err);
+      this.deployments = JSON.parse(reply) || [];
+    });
+  }
 
   getDeployments() {
     return this.deployments;
@@ -54,11 +66,15 @@ export class DeploymentService {
   }
 
   private notifySubscribersOfUpdate(deployment : Deployment) {
-    const updateModel = { type : "DeploymentUpdatedEvent", payload : deployment };
-    const modelAsString = JSON.stringify(updateModel);
-    console.log("Sending update model", modelAsString);
-    this.webSocketServer.clients.forEach(client =>
-      client.send(modelAsString)
-    );
+    this.redisClient.set("deployments", JSON.stringify(this.deployments), (err) => {
+      if (err) return console.error(err.message, err);
+
+      const updateModel = { type : "DeploymentUpdatedEvent", payload : deployment };
+      const modelAsString = JSON.stringify(updateModel);
+      console.log("Sending update model", modelAsString);
+      this.webSocketServer.clients.forEach(client =>
+        client.send(modelAsString)
+      );
+    });
   }
 }
