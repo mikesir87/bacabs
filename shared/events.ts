@@ -15,9 +15,10 @@ export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
   name : string;
   url : string;
+  appGroup? : string,
   issue : {
-    identifier : string,
-    url : string
+    identifier? : string,
+    url? : string
   },
   lastCommit : {
     ref : string

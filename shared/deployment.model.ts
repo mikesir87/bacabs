@@ -16,7 +16,7 @@ export interface LastCommit {
 }
 
 export interface IssueDetails {
-  identifier: string;
+  identifier?: string;
   url?: string;
   summary?: string;
   acceptanceTesting?: boolean;

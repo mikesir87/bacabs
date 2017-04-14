@@ -1,11 +1,19 @@
+version: '2'
 
-app:
-  image: nginx
-  labels:
-    - "deployment.name=CREST-4117"
-    - "deployment.url=https://crest-4117.docker.localhost/"
-    - "deployment.issue.identifier=CREST-4117"
-    - "deployment.issue.url=https://webapps.es.vt.edu/jira/browse/CREST-4117"
-    - "deployment.vcs.ref=refs/heads/CREST-4117"
-    - "traefik.backend=crest-4117"
-    - "traefik.frontend.rule=Host:crest-4117.docker.localhost"
+services:
+  app:
+    image: nginx
+    labels:
+      - "deployment.name=api"
+      - "deployment.url=http://api.docker.localhost/"
+      - "deployment.issue.identifier=ISSUE-1234"
+      - "deployment.issue.url=https://some.jira.instace/browse/ISSUE-1234"
+      - "deployment.vcs.ref=refs/heads/ISSUE-1234"
+      - "traefik.backend=crest-4117"
+      - "traefik.frontend.rule=Host:api.docker.localhost"
+      - "traefik.port=80"
+
+networks:
+  default:
+    external:
+      name: qa-frontend

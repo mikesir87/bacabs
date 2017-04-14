@@ -5,9 +5,7 @@ import { DeploymentUpdateEvent } from "../shared/events";
 import {ContainerInfo} from "dockerode-ts";
 
 const labelArray = [
-  'deployment.name', 'deployment.url',
-  'deployment.issue.identifier', 'deployment.issue.url',
-  'deployment.vcs.ref'
+  'deployment.name', 'deployment.url', 'deployment.vcs.ref'
 ];
 
 const eventStreamOptions = {
@@ -25,13 +23,18 @@ const listOptions = {
 };
 
 const processContainer = (status : 'UP' | 'DOWN', labels : any) => {
+  const appGroup = ('deployment.appGroup' in labels) ? labels['deployment.appGroup'] : null;
+  const issueIdentifier = ('deployment.issue.identifier' in labels) ? labels['deployment.issue.identifier'] : null;
+  const issueUrl = ('deployment.issue.url' in labels) ? labels['deployment.issue.url'] : null;
+
   let message : DeploymentUpdateEvent = {
     name : labels['deployment.name'],
     status,
     url : labels['deployment.url'],
+    appGroup,
     issue : {
-      identifier: labels['deployment.issue.identifier'],
-      url : labels['deployment.issue.url']
+      identifier: issueIdentifier,
+      url : issueUrl,
     },
     lastCommit : {
       ref : labels['deployment.vcs.ref'],
