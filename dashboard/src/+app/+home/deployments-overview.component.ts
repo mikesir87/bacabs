@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Deployment} from "../../../../shared/deployment.model";
 
 @Component({
@@ -10,40 +10,29 @@ import {Deployment} from "../../../../shared/deployment.model";
     </div>
     
     <div *ngIf="deployments.length > 0">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Issue</th>
-            <th>Summary</th>
-            <th>Last Code Update</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let deployment of deployments">
-            <td>
-              <a [href]="deployment.url" target="_blank">{{ deployment.name }}</a>
-              <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
-            </td>
-            <td>
-              <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
-            </td>
-            <td>{{ deployment.issue.summary || '--' }}</td>
-            <td>
-              <span *ngIf="deployment.lastCommit.date">
-                {{ (deployment.lastCommit.date / 1000 | amFromUnix) | amDateFormat:'llll' }} by {{ deployment.lastCommit.author }}
-              </span>
-              <span *ngIf="!deployment.lastCommit.date">
-                <em>Unknown</em>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <deployment-group-display *ngFor="let groupName of groups | objectKeys" [name]="groupName" [deployments]="groups[groupName]"></deployment-group-display>
     </div>
   `
 })
-export class DeploymentsOverviewComponent {
+export class DeploymentsOverviewComponent implements OnChanges {
   @Input() deployments : Deployment[];
 
+  private groups : { [key: string] : Deployment[] };
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.groups = {};
+
+    this.groups = this.deployments
+      .map(deployment => Object.assign({}, { appGroup : 'None' }, deployment))
+      .reduce(
+        (groups, deployment) => {
+          if (groups[deployment.appGroup] === undefined)
+            groups[deployment.appGroup] = [];
+          groups[deployment.appGroup].push(deployment);
+          return groups;
+        },
+        {}
+      );
+  }
 }

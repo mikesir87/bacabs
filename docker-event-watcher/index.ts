@@ -32,15 +32,15 @@ const processContainer = (status : 'UP' | 'DOWN', labels : any, creationTime : n
     status,
     creationTime,
     url : labels['deployment.url'],
-    appGroup,
     lastCommit : {
       ref : labels['deployment.vcs.ref'],
     }
   };
 
-  if (issueIdentifier && issueUrl) {
+  if (issueIdentifier && issueUrl)
     message.issue = { identifier : issueIdentifier, url : issueUrl };
-  }
+  if (appGroup)
+    message.appGroup = appGroup;
 
   publisher.publishMessage(message);
 };
