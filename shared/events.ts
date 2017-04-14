@@ -13,12 +13,13 @@ export interface SourceCodeUpdateEvent {
 
 export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
+  creationTime : number;
   name : string;
   url : string;
   appGroup? : string,
-  issue : {
-    identifier? : string,
-    url? : string
+  issue? : {
+    identifier : string,
+    url : string
   },
   lastCommit : {
     ref : string

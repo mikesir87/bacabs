@@ -22,7 +22,7 @@ const listOptions = {
   }
 };
 
-const processContainer = (status : 'UP' | 'DOWN', labels : any) => {
+const processContainer = (status : 'UP' | 'DOWN', labels : any, creationTime : number) => {
   const appGroup = ('deployment.appGroup' in labels) ? labels['deployment.appGroup'] : null;
   const issueIdentifier = ('deployment.issue.identifier' in labels) ? labels['deployment.issue.identifier'] : null;
   const issueUrl = ('deployment.issue.url' in labels) ? labels['deployment.issue.url'] : null;
@@ -30,16 +30,18 @@ const processContainer = (status : 'UP' | 'DOWN', labels : any) => {
   let message : DeploymentUpdateEvent = {
     name : labels['deployment.name'],
     status,
+    creationTime,
     url : labels['deployment.url'],
     appGroup,
-    issue : {
-      identifier: issueIdentifier,
-      url : issueUrl,
-    },
     lastCommit : {
       ref : labels['deployment.vcs.ref'],
     }
   };
+
+  if (issueIdentifier && issueUrl) {
+    message.issue = { identifier : issueIdentifier, url : issueUrl };
+  }
+
   publisher.publishMessage(message);
 };
 
@@ -48,7 +50,8 @@ dockerClient.listContainers(listOptions, (err, containers : ContainerInfo[]) => 
 
   containers.forEach((container : ContainerInfo) => {
     let labels : any = container.Labels;
-    processContainer("UP", labels);
+    console.log("See container!", container);
+    processContainer("UP", labels, container.Created);
   });
 });
 
@@ -61,7 +64,8 @@ dockerClient.getEvents(eventStreamOptions, function(err, stream) {
   stream.on('data', function(chunk) {
     let data = JSON.parse(chunk.toString());
     console.log("Received event", chunk);
-    processContainer((data.Action == 'start') ? 'UP' : 'DOWN', data.Actor.Attributes);
+    const action = (data.Action == 'start') ? 'UP' : 'DOWN';
+    processContainer(action, data.Actor.Attributes, action == 'UP' ? data.time : -1);
   });
 
   stream.on('close', function() {
