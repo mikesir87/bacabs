@@ -10,7 +10,7 @@ import { ReconnectingWebSocket } from './ReconnectingWebsocket';
 import {State} from "../reducers/index";
 import {Store} from "@ngrx/store";
 import {Actions, ConnectionState} from "../reducers/connection";
-import {Observer} from "rxjs";
+import {BehaviorSubject, Observer, Subject} from "rxjs";
 
 export interface IncomingEvent {
   type: string;
@@ -20,9 +20,9 @@ export interface IncomingEvent {
 @Injectable()
 export class ConnectionService {
 
-    private wsEventListener : Observable<IncomingEvent>;
-    private wsEventObserver : Observer<IncomingEvent>;
     private webSocket : ReconnectingWebSocket;
+
+    private subject : Subject<any>;
 
     constructor(private store: Store<State>) {
         if (isBrowser) {
@@ -34,7 +34,7 @@ export class ConnectionService {
             this.webSocket.onmessage = this.onMessage.bind(this);
         }
 
-        this.wsEventListener = Observable.create((observer) => this.wsEventObserver = observer);
+        this.subject = new BehaviorSubject(null);
     }
 
     isConnected() : Observable<Boolean> {
@@ -44,7 +44,8 @@ export class ConnectionService {
     }
 
     getEvents() : Observable<IncomingEvent> {
-      return this.wsEventListener;
+      return this.subject
+        .filter(message => message != null);
     }
 
     private onOpen() {
@@ -59,6 +60,6 @@ export class ConnectionService {
 
     private onMessage(messageData : MessageEvent) {
         console.log("Message received", messageData.data);
-        this.wsEventObserver.next(JSON.parse(messageData.data) as IncomingEvent);
+        this.subject.next(JSON.parse(messageData.data) as IncomingEvent);
     }
 }

@@ -35,6 +35,11 @@ export class DeploymentService {
         .filter(message => message.type == 'DeploymentUpdatedEvent')
         .map(message => message.payload as Deployment)
         .subscribe(event => this.processEvent(event));
+
+      this.connectionService.getEvents()
+        .filter(message => message.type == 'DeploymentRemovedEvent')
+        .map(message => message.payload as Deployment)
+        .subscribe(event => this.store.dispatch({ type : Actions.REMOVE_DEPLOYMENT, payload : event}));
     }
 
     getDeployments() : Observable<Deployment[]> {

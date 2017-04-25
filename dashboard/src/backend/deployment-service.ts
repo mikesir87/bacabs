@@ -3,6 +3,7 @@ import {Deployment} from "../../../shared/deployment.model";
 import {DeploymentUpdateEvent, SourceCodeUpdateEvent} from "../../../shared/events";
 import WebSocket = require("ws");
 import * as redis from "redis";
+import Timer = NodeJS.Timer;
 
 export interface Notifier {
   notify(event : any);
@@ -11,8 +12,11 @@ export interface Notifier {
 
 export class DeploymentService {
 
+  private readonly DOWN_TIMEOUT = 5000;
+
   private redisClient : redis.RedisClient;
   private deployments : Deployment[] = [];
+  private timeouts : { [identifier : string] : Timer } = {};
 
   constructor(private webSocketServer : WebSocket.Server) {
     this.redisClient = redis.createClient({ host : 'redis' });
@@ -23,6 +27,12 @@ export class DeploymentService {
     this.redisClient.get("deployments", (err, reply) => {
       if (err) return console.error(err.message, err);
       this.deployments = JSON.parse(reply) || [];
+
+      this.deployments.forEach(deployment => {
+        if (deployment.status == 'DOWN') {
+          this.processDownDeployment(deployment);
+        }
+      })
     });
   }
 
@@ -33,6 +43,8 @@ export class DeploymentService {
   processDeployment(event: DeploymentUpdateEvent) {
     const deploymentIndex = this.deployments.findIndex(d => d.name == event.name);
     let newDeployment : Deployment = null;
+    delete this.timeouts[event.name];
+
     if (deploymentIndex == -1) {
       if (event.status == 'DOWN') { // Don't care about those we haven't seen that are dying
         console.log("Ignoring message - unrecognized dying container");
@@ -42,11 +54,17 @@ export class DeploymentService {
       this.deployments = [...this.deployments, newDeployment];
     }
     else {
+      // Deleting lastCommit data; provided by vcs updates; don't want this update to override/remove the data
       delete event['lastCommit'];
       newDeployment = Object.assign({}, this.deployments[deploymentIndex], event);
       this.updateDeployment(newDeployment, deploymentIndex);
     }
-    this.notifySubscribersOfUpdate(newDeployment);
+
+    if (event.status == 'DOWN') {
+      this.processDownDeployment(event);
+    }
+
+    this.notifySubscribersOfUpdate(newDeployment, "UPDATE");
   }
 
   processVcsUpdate(sourceCodeUpdateEvent: SourceCodeUpdateEvent) {
@@ -56,7 +74,24 @@ export class DeploymentService {
       return;
     const newDeployment = Object.assign({}, this.deployments[deploymentIndex], { lastCommit : sourceCodeUpdateEvent });
     this.updateDeployment(newDeployment, deploymentIndex);
-    this.notifySubscribersOfUpdate(newDeployment);
+    this.notifySubscribersOfUpdate(newDeployment, "UPDATE");
+  }
+
+  private processDownDeployment(deployment : Deployment) {
+    this.timeouts[deployment.name] = setTimeout(() => {
+      if (this.timeouts[deployment.name] === undefined)
+        return;
+
+      this.removeDeployment(deployment);
+      this.notifySubscribersOfUpdate(deployment, "REMOVAL")
+    }, this.DOWN_TIMEOUT); // a comment
+  }
+
+  private removeDeployment(deployment : Deployment) {
+    const deploymentIndex = this.deployments.findIndex(d => d.name === deployment.name);
+    if (deploymentIndex == -1)
+      return;
+    this.deployments = [...this.deployments.slice(0, deploymentIndex), ...this.deployments.slice(deploymentIndex + 1)];
   }
 
   private updateDeployment(deployment : Deployment, index : number) {
@@ -65,11 +100,12 @@ export class DeploymentService {
     ];
   }
 
-  private notifySubscribersOfUpdate(deployment : Deployment) {
+  private notifySubscribersOfUpdate(deployment : Deployment, type : "UPDATE" | "REMOVAL") {
     this.redisClient.set("deployments", JSON.stringify(this.deployments), (err) => {
       if (err) return console.error(err.message, err);
 
-      const updateModel = { type : "DeploymentUpdatedEvent", payload : deployment };
+      const eventType = (type == "UPDATE") ? "DeploymentUpdatedEvent" : "DeploymentRemovedEvent";
+      const updateModel = {type: eventType, payload: deployment};
       const modelAsString = JSON.stringify(updateModel);
       console.log("Sending update model", modelAsString);
       this.webSocketServer.clients.forEach(client =>
@@ -77,4 +113,5 @@ export class DeploymentService {
       );
     });
   }
+
 }
