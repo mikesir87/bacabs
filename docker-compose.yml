@@ -1,14 +1,6 @@
 version: '3.2'
 
 services:
-  redis:
-    image: redis:3.0
-    command: redis-server --appendonly yes
-    networks:
-      - qa-backend
-    volumes:
-      - redis_data:/data
-
   traefik:
     image: traefik
     command: --web --docker --logLevel=DEBUG
@@ -16,7 +8,7 @@ services:
       - "80:80"
       - "8080:8080"
     networks:
-      - qa-frontend
+      - qa-application
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/null:/traefik.toml
@@ -28,55 +20,63 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./dashboard:/app
-      - ./shared:/shared
+      - ./dashboard:/app:rw,cached
+      - ./shared:/shared:ro,cached
     networks:
-      - qa-frontend
+      - qa-application
       - qa-backend
     labels:
       - "traefik.backend=bacabs"
-      - "traefik.docker.network=qa-frontend"
-      - "traefik.frontend.rule=Host:bacabs.docker.localhost"
+      - "traefik.docker.network=qa-application"
+      - "traefik.frontend.rule=Host:localhost"
       - "traefik.port=3000"
 
-  docker:
+  redis:
+    image: redis:3.0
+    command: redis-server --appendonly yes
+    networks:
+      - qa-backend
+    volumes:
+      - redis_data:/data
+
+  docker-event-watcher:
     build:
       context: ./docker-event-watcher/
       dockerfile: Dockerfile-dev
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./docker-event-watcher:/app
-      - ./shared:/shared
+      - ./docker-event-watcher:/app:rw,cached
+      - ./shared:/shared:ro,cached
+    deploy:
+      mode: global
     networks:
       - qa-backend
 
-  gitlab:
+  gitlab-webhook-receiver:
     build:
       context: ./gitlab-webhook-receiver/
       dockerfile: Dockerfile-dev
     volumes:
-      - ./gitlab-webhook-receiver:/app
-      - ./shared:/shared
+      - ./gitlab-webhook-receiver:/app:rw,cached
+      - ./shared:/shared:ro,cached
     networks:
-      - qa-frontend
+      - qa-application
       - qa-backend
     labels:
       - "traefik.backend=gitlab"
-      - "traefik.docker.network=qa-frontend"
-      - "traefik.frontend.rule=Host:gitlab.docker.localhost"
+      - "traefik.docker.network=qa-application"
+      - "traefik.frontend.rule=Host:gitlab.localhost"
       - "traefik.port=80"
 
 volumes:
   shared:
     driver: local
-#    - ./shared:/shared
 
   redis_data:
     driver: local
-    #    - /data
 
 networks:
-  qa-frontend:
+  qa-application:
     external: true
   qa-backend:
     driver: overlay
