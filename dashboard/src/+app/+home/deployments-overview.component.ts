@@ -12,7 +12,10 @@ import {Deployment} from "../../../../shared/deployment.model";
     <div *ngIf="deployments.length > 0">
       <deployment-group-display *ngFor="let groupName of groups | objectKeys" [name]="groupName" [deployments]="groups[groupName]"></deployment-group-display>
     </div>
-  `
+  `,
+  styles: [
+    'deployment-group-display { display: block; margin-bottom: 40px; }',
+  ]
 })
 export class DeploymentsOverviewComponent implements OnChanges {
   @Input() deployments : Deployment[];

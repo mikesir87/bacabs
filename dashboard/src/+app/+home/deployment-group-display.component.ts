@@ -22,9 +22,15 @@ import {Deployment} from "../../../../shared/deployment.model";
             <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
           </td>
           <td>
-            <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
+            <span *ngIf="deployment.issue">
+              <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
+            </span>
           </td>
-          <td>{{ deployment.issue.summary || '--' }}</td>
+          <td>
+            <span *ngIf="deployment.issue">
+              {{ deployment.issue.summary || '--' }}
+            </span>
+          </td>
           <td>
             <span *ngIf="deployment.creationTime > 0">
               {{ (deployment.creationTime | amFromUnix) | amDateFormat:'llll' }}
