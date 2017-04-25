@@ -1,10 +1,10 @@
 {
-  "name": "universal-starter",
+  "name": "bacabs-dashboard",
   "version": "2.0.0",
-  "description": "Angular 2 Universal starter kit by @AngularClass",
+  "description": "Dashboard for the Bacabs application",
   "repository": {
     "type": "git",
-    "url": "https://github.com/angular/universal-starter.git"
+    "url": "https://github.com/mikesir87/bacabs.git"
   },
   "scripts": {
     "watch": "webpack --watch",
@@ -31,11 +31,7 @@
   },
   "license": "MIT",
   "contributors": [
-    "AngularClass <hello@angularclass.com>",
-    "PatrickJS <patrick@angularclass.com>",
-    "Jeff Whelpley <jeff@gethuman.com>",
-    "Jeff Cross <crossj@google.com>",
-    "Mark Pieszak <mpieszak84@gmail.com>"
+    "Michael Irwin <mikesir@vt.edu>",
   ],
   "dependencies": {
     "@angular/common": "~2.1.2",
