@@ -1,0 +1,18 @@
+FROM node:7.9 AS node-build
+
+WORKDIR /app
+COPY ./dashboard/package.json /app
+RUN npm install
+
+COPY ./dashboard /app/
+COPY ./shared /shared
+RUN npm run build
+
+
+FROM node:7.9-alpine
+WORKDIR /app
+COPY --from=node-build /app/package.json /app
+RUN npm install --production
+COPY --from=node-build /app/dist/ /app/
+CMD node /app/index.js
+
