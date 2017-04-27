@@ -22,7 +22,7 @@ services:
     labels:
       - "traefik.backend=bacabs"
       - "traefik.docker.network=qa-application"
-      - "traefik.frontend.rule=Host:localhost"
+      - "traefik.frontend.rule=Host:${BACABS_HOST}"
       - "traefik.port=3000"
 
   redis:
@@ -50,7 +50,7 @@ services:
     labels:
       - "traefik.backend=gitlab"
       - "traefik.docker.network=qa-application"
-      - "traefik.frontend.rule=Host:gitlab.localhost"
+      - "traefik.frontend.rule=Host:gitlab.${BACABS_HOST}"
       - "traefik.port=80"
 
 volumes:
