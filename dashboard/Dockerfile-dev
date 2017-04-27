@@ -1,5 +1,6 @@
-FROM node:7.2
+FROM node:7.9
 
 WORKDIR /app
+EXPOSE 4200
 
 CMD npm install && npm run dev
