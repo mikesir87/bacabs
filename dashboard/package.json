@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "concurrently \"npm run ng-server\" \"npm run backend-server\"",
-    "ng-server": "ng serve --proxy-config server-proxy-config.json",
+    "ng-server": "ng serve --host 0.0.0.0 --proxy-config server-proxy-config.json",
     "backend-server": "nodemon --watch server server/index.js",
     "start": "webpack-dev-server --port=4200",
     "build": "webpack",
@@ -17,8 +17,17 @@
   },
   "private": true,
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "redis": "^2.7.1",
+    "ws": "^2.3.1"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.0.0",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
+    "@angular/compiler-cli": "^4.0.0",
     "@angular/core": "^4.0.0",
     "@angular/forms": "^4.0.0",
     "@angular/http": "^4.0.0",
@@ -27,22 +36,13 @@
     "@angular/router": "^4.0.0",
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^2.2.2",
-    "angular2-moment": "^1.0.0",
-    "body-parser": "^1.17.1",
-    "core-js": "^2.4.1",
-    "express": "^4.15.2",
-    "redis": "^2.7.1",
-    "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
-  },
-  "devDependencies": {
-    "@angular/cli": "1.0.0",
-    "@angular/compiler-cli": "^4.0.0",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
+    "angular2-moment": "^1.0.0",
     "autoprefixer": "^6.5.3",
     "codelyzer": "~2.0.0",
     "concurrently": "^3.4.0",
+    "core-js": "^2.4.1",
     "css-loader": "^0.26.1",
     "cssnano": "^3.10.0",
     "exports-loader": "^0.6.3",
@@ -64,6 +64,7 @@
     "postcss-url": "^5.1.2",
     "protractor": "~5.1.0",
     "raw-loader": "^0.5.1",
+    "rxjs": "^5.1.0",
     "sass-loader": "^4.1.1",
     "script-loader": "^0.7.0",
     "source-map-loader": "^0.1.5",
@@ -73,6 +74,7 @@
     "tslint": "~4.5.0",
     "typescript": "~2.2.0",
     "url-loader": "^0.5.7",
-    "webpack-dev-server": "~2.3.0"
+    "webpack-dev-server": "~2.3.0",
+    "zone.js": "^0.8.4"
   }
 }

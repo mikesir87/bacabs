@@ -9,7 +9,7 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConnectionIndicator } from './connection-indicator.component';
-import {reducer} from "../../../dashboard/src/+app/reducers/index";
+import {reducer} from "./reducers/index";
 import {StoreModule} from "@ngrx/store";
 import {RouterModule} from "@angular/router";
 import {HttpModule} from "@angular/http";
