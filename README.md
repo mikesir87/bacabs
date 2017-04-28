@@ -15,7 +15,17 @@
  
 ## Running
 
-After meeting the requirements above, simply launch the stack!
+The app is available as a Docker Swarm stack, but there's a little bit of configuration that is needed to run.
+
+### Runtime Configuration
+
+- `$BACABS_HOST` - the hostname for the dashboard. The other components will be subdomains upon this root
+- `$TRAEFIK_ARGS` - other arguments to provide when starting up Traefik. This allows you to setup ACME (LetsEncrypt), logging, etc.  To see all available options, you can run `docker run --rm traefik:1.2-alpine --help`
+
+
+### Launching
+
+After setting the runtime configuration and meeting the requirements above, simply launch the stack!
 
 ```docker stack deploy -c docker-stack.yml bacabs```
 
