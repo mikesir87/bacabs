@@ -13,7 +13,7 @@ export interface SourceCodeUpdateEvent {
 
 export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
-  creationTime : number;
+  creationTime? : number;
   name : string;
   url : string;
   appGroup? : string,
