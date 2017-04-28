@@ -40,7 +40,14 @@ The requirements listed above still apply.  Once met, run:
 
 ```docker-compose up -d```
  
+
  
+## Building
+
+There is a simple build script (`build.sh`) that simply performs all of the Docker builds for the application.
+
+- `-t` - specify the tag to be applied to the built images. _Default: latest_
+- `-p` - when set, images are pushed after they are built
 
 
 ## Roadmap
