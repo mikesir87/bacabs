@@ -3,9 +3,7 @@ import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
-    RouterModule.forChild([
-      { path: '', redirectTo: '/home', pathMatch: 'full' }
-    ])
+    RouterModule.forChild([ ])
   ],
 })
 export class AppRoutingModule { }
