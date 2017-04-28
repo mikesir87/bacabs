@@ -24,8 +24,8 @@ export class ConnectionService {
     private subject : Subject<any>;
 
     constructor(private store: Store<State>) {
-        const protocol = (window.location.protocol == 'https') ? 'wss' : 'ws';
-        const url = `${protocol}://${window.location.host}/events`;
+        const protocol = window.location.protocol.replace("http", "ws");
+        const url = `${protocol}//${window.location.host}/events`;
         this.webSocket = new ReconnectingWebSocket(url);
         this.webSocket.onopen = this.onOpen.bind(this);
         this.webSocket.onclose = this.onClose.bind(this);
