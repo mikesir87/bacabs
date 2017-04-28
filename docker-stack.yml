@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   traefik:
-    image: traefik
+    image: traefik:1.2-alpine
     command: --web $TRAEFIK_ARGS --docker --logLevel=DEBUG
     ports:
       - "80:80"
