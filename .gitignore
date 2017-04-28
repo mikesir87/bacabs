@@ -22,3 +22,4 @@ morgan.log
 ts-node
 
 *.js
+!dashboard/server/*.js
