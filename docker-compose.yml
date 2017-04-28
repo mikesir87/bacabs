@@ -47,8 +47,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./docker-event-watcher:/app:rw,cached
       - ./shared:/shared:rw,cached
-    deploy:
-      mode: global
     networks:
       - qa-backend
 
