@@ -85,7 +85,7 @@ var DeploymentService = (function () {
         this.deployments = [
                 ...this.deployments.slice(0, index),
                 deployment,
-                this.deployments.slice(index + 1)
+                ...this.deployments.slice(index + 1)
             ];
     };
 
