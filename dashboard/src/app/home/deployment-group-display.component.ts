@@ -34,7 +34,7 @@ import {Deployment} from "../../../../shared/deployment.model";
           
           <td>
             <span *ngIf="deployment.healthStatus == 'healthy'">
-              <i class="fa fa-thumbs-up"></i>
+              <i class="fa fa-thumbs-up text-success"></i>
             </span>
             <span *ngIf="deployment.healthStatus == 'unhealthy'">
               <i class="fa fa-thumbs-down text-danger"></i>
