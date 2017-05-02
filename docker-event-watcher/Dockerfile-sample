@@ -1,0 +1,7 @@
+FROM nginx
+
+RUN apt-get update && apt-get install -y curl
+
+RUN echo "HI THERE" > /usr/share/nginx/html/test.txt
+
+HEALTHCHECK --interval=5s --timeout=5s CMD curl -f localhost/test.txt || exit 1

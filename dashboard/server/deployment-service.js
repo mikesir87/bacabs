@@ -17,7 +17,7 @@ var DeploymentService = (function () {
     };
 
     DeploymentService.prototype.processDeployment = function (event) {
-        var deploymentIndex = this.deployments.findIndex(d => d.name == event.name);
+        var deploymentIndex = this.deployments.findIndex(d => d.name == event.name && d.appGroup == event.appGroup);
         var newDeployment = null;
         delete this.timeouts[event.name];
         if (deploymentIndex == -1) {
@@ -46,6 +46,19 @@ var DeploymentService = (function () {
         if (deploymentIndex == -1)
             return;
         var newDeployment = Object.assign({}, this.deployments[deploymentIndex], { lastCommit: sourceCodeUpdateEvent });
+        this.updateDeployment(newDeployment, deploymentIndex);
+        this.notifySubscribersOfUpdate(newDeployment, "UPDATE");
+    };
+
+    DeploymentService.prototype.processHealthCheckUpdate = function(healthCheckUpdateEvent) {
+        var deploymentIndex = this.deployments.findIndex(d => d.name == healthCheckUpdateEvent.deployment.name &&
+                d.appGroup == healthCheckUpdateEvent.deployment.appGroup);
+        if (deploymentIndex == -1) {
+            return console.log("Received health status for unknown deployment", event);
+        }
+
+        console.log("Found deployment to update", this.deployments[deploymentIndex]);
+        var newDeployment = Object.assign({}, this.deployments[deploymentIndex], { healthStatus : healthCheckUpdateEvent.status });
         this.updateDeployment(newDeployment, deploymentIndex);
         this.notifySubscribersOfUpdate(newDeployment, "UPDATE");
     };
@@ -85,7 +98,7 @@ var DeploymentService = (function () {
         this.deployments = [
                 ...this.deployments.slice(0, index),
                 deployment,
-                this.deployments.slice(index + 1)
+                ...this.deployments.slice(index + 1)
             ];
     };
 
