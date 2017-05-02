@@ -10,11 +10,11 @@ import { ConnectionService } from './shared/connection.service';
     'nav { margin-bottom: 30px; }'
   ],
   template: `
-  <nav class="navbar navbar-dark bg-inverse">
+  <nav class="navbar navbar-dark navbar-inverse bg-inverse">
     <div class="container">
       <a class="navbar-brand" href="javascript:void(0)">Bacabs</a>
 
-      <connection-indicator [connected]="connected | async" class="navbar-text float-xs-right text-muted"></connection-indicator>
+      <connection-indicator [connected]="connected | async" class="navbar-text float-right text-muted"></connection-indicator>
     </div>
   </nav>
   <main class="container">
