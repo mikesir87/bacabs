@@ -12,7 +12,10 @@ import { ConnectionService } from './shared/connection.service';
   template: `
   <nav class="navbar navbar-dark navbar-inverse bg-inverse">
     <div class="container">
-      <a class="navbar-brand" href="javascript:void(0)">Bacabs</a>
+      <a class="navbar-brand" href="javascript:void(0)">
+        <img src="/logo-light.png" style="display:inline-block;margin-top:-2px;height:22px;" />&nbsp;
+        Bacabs
+      </a>
 
       <connection-indicator [connected]="connected | async" class="navbar-text float-right text-muted"></connection-indicator>
     </div>
