@@ -20,12 +20,17 @@ var RedisListener = (function () {
                     return this.deploymentService.processDeployment(data);
                 case events_1.CHANNELS.VCS_UPDATES:
                     return this.deploymentService.processVcsUpdate(data);
+                case events_1.CHANNELS.HEALTH_STATUS:
+                    return this.deploymentService.processHealthCheckUpdate(data);
                 default:
                     console.log("Unknown message", channel, data);
             }
         });
 
-        Object.keys(events_1.CHANNELS).forEach((key) => _this.redisClient.subscribe(events_1.CHANNELS[key]));
+        Object.keys(events_1.CHANNELS).forEach((key) => {
+          console.log("Subscribing to redis channel: " + events_1.CHANNELS[key]);
+          _this.redisClient.subscribe(events_1.CHANNELS[key]);
+        });
     };
 
     return RedisListener;

@@ -15,5 +15,5 @@ appServer.registerRoutes('/api', apiRoutes.getRouter());
 new RedisListener.RedisListener(deploymentService);
 
 wss.on("connection", function (ws) {
-    console.log("-- A new user has connected");
+    console.log("-- A new user has connected!");
 });
