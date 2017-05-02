@@ -1,7 +1,8 @@
 
 export const CHANNELS = {
   VCS_UPDATES : "vcs-updates",
-  DEPLOYMENTS : "deployment-updates"
+  DEPLOYMENTS : "deployment-updates",
+  HEALTH_STATUS : "health-status-updates",
 };
 
 export interface SourceCodeUpdateEvent {
@@ -24,4 +25,12 @@ export interface DeploymentUpdateEvent {
   lastCommit : {
     ref : string
   }
+}
+
+export interface HealthStatusUpdate {
+  status : 'healthy' | 'unhealthy';
+  deployment: {
+    name : string;
+    appGroup? : string;
+  };
 }

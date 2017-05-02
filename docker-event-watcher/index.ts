@@ -1,7 +1,7 @@
 import Dockerode from 'dockerode-ts';
 const dockerClient = new Dockerode();
 import { publisher } from './publisher';
-import { DeploymentUpdateEvent } from "../shared/events";
+import {DeploymentUpdateEvent, HealthStatusUpdate} from "../shared/events";
 import {ContainerInfo} from "dockerode-ts";
 
 const labelArray = [
@@ -16,13 +16,21 @@ const eventStreamOptions = {
   }
 };
 
+const healthCheckEventStreamOptions = {
+  filters: {
+    type: ['container'],
+    event: ['health_status'],
+    label: labelArray
+  }
+};
+
 const listOptions = {
   filters: {
     label: labelArray
   }
 };
 
-const processContainer = (status : 'UP' | 'DOWN', labels : any, creationTime? : number) => {
+const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTime? : number) => {
   const appGroup = ('deployment.appGroup' in labels) ? labels['deployment.appGroup'] : null;
   const issueIdentifier = ('deployment.issue.identifier' in labels) ? labels['deployment.issue.identifier'] : null;
   const issueUrl = ('deployment.issue.url' in labels) ? labels['deployment.issue.url'] : null;
@@ -43,8 +51,23 @@ const processContainer = (status : 'UP' | 'DOWN', labels : any, creationTime? : 
   if (creationTime)
     message.creationTime = creationTime;
 
-  publisher.publishMessage(message);
+  publisher.publishDeploymentUpdate(message);
 };
+
+const processHealthStatusEvent = (healthStatus : string, name : string, appGroup? : string) => {
+  const status = (healthStatus == 'health_status: healthy') ? 'healthy' : 'unhealthy';
+
+  const message : HealthStatusUpdate = {
+    status,
+    deployment: { name }
+  };
+
+  if (appGroup)
+    message.deployment.appGroup = appGroup;
+
+  publisher.publishHealthStatusUpdate(message);
+};
+
 
 dockerClient.listContainers(listOptions, (err, containers : ContainerInfo[]) => {
   if (err) return console.error(err.message, err);
@@ -52,24 +75,37 @@ dockerClient.listContainers(listOptions, (err, containers : ContainerInfo[]) => 
   containers.forEach((container : ContainerInfo) => {
     let labels : any = container.Labels;
     console.log("See container!", container);
-    processContainer("UP", labels, container.Created);
+    processContainerEvent("UP", labels, container.Created);
   });
 });
 
 
 dockerClient.getEvents(eventStreamOptions, function(err, stream) {
   if (err) return console.error(err.message, err);
-  console.log("Listening for Docker events");
+  console.log("Listening for Docker events for container starts/stops");
   stream.setEncoding('utf8');
 
   stream.on('data', function(chunk) {
     let data = JSON.parse(chunk.toString());
-    console.log("Received event", chunk);
+    console.log("Received container event", chunk);
     const action = (data.Action == 'start') ? 'UP' : 'DOWN';
-    processContainer(action, data.Actor.Attributes, action == 'UP' ? data.time : null);
+    processContainerEvent(action, data.Actor.Attributes, action == 'UP' ? data.time : null);
   });
 
-  stream.on('close', function() {
-    console.warn("Connection to Docker daemon has been lost");
+  stream.on('close', () => console.warn("Connection listening to container start/stop events has closed"));
+});
+
+
+dockerClient.getEvents(healthCheckEventStreamOptions, (err, stream) => {
+  if (err) return console.error(err.message, err);
+  console.log("Listening to Docker events for health status changes");
+  stream.setEncoding('utf8');
+
+  stream.on('data', (chunk) => {
+    const data = JSON.parse(chunk.toString());
+    console.log("Received health status event", chunk);
+    processHealthStatusEvent(data.status, data.Actor.Attributes['deployment.name'], data.Actor.Attributes['deployment.appGroup']);
   });
+
+  stream.on('close', () => console.warn("Connection listening to health status changes has closed"));
 });

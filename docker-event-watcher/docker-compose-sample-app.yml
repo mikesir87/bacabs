@@ -2,7 +2,9 @@ version: '2'
 
 services:
   app:
-    image: nginx
+    build:
+      context: ./
+      dockerfile: Dockerfile-sample 
     labels:
       - "deployment.name=api"
       - "deployment.url=http://api.docker.localhost/"

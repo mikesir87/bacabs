@@ -6,6 +6,7 @@ export interface Deployment {
   status: 'UP' | 'DOWN' | 'UNKNOWN';
   issue?: IssueDetails;
   lastCommit: LastCommit;
+  healthStatus? : 'healthy' | 'unhealthy';
 }
 
 export interface LastCommit {
