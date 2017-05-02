@@ -10,6 +10,7 @@ import {Deployment} from "../../../../shared/deployment.model";
       <thead>
         <tr>
           <th>Name</th>
+          <th>Health</th>
           <th>Issue</th>
           <th>Summary</th>
           <th>Last Deploy</th>
@@ -18,13 +19,33 @@ import {Deployment} from "../../../../shared/deployment.model";
       <tbody>
         <tr *ngFor="let deployment of deployments">
           <td>
-            <a [href]="deployment.url" target="_blank">{{ deployment.name }}</a>
-            <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
+            <span *ngIf="deployment.status == 'UP'; else deploymentDown">
+              <span *ngIf="deployment.healthStatus == 'unhealthy'; else deploymentLink">{{ deployment.name }}</span>
+              <template #deploymentLink>
+                <a [href]="deployment.url" target="_blank">{{ deployment.name }}</a>
+              </template>
+            </span>
+            
+            <template #deploymentDown>
+              {{ deployment.name }}
+              <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
+            </template>
           </td>
+          
           <td>
-            <span *ngIf="deployment.issue">
+            <span *ngIf="deployment.healthStatus == 'healthy'">
+              <i class="fa fa-thumbs-up"></i>
+            </span>
+            <span *ngIf="deployment.healthStatus == 'unhealthy'">
+              <i class="fa fa-thumbs-down text-danger"></i>
+            </span>
+          </td>
+          
+          <td>
+            <span *ngIf="deployment.issue; else noIssueUrl">
               <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
             </span>
+            <template #noIssueUrl>--</template>
           </td>
           <td>
             <span *ngIf="deployment.issue">
