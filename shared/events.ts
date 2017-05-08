@@ -14,6 +14,7 @@ export interface SourceCodeUpdateEvent {
 
 export interface DeploymentUpdateEvent {
   status : 'UP' | 'DOWN';
+  healthStatus? : 'healthy' | 'unhealthy';
   creationTime? : number;
   name : string;
   url : string;

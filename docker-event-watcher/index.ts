@@ -30,7 +30,7 @@ const listOptions = {
   }
 };
 
-const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTime? : number) => {
+const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTime? : number, healthy? : boolean) => {
   const appGroup = ('deployment.appGroup' in labels) ? labels['deployment.appGroup'] : null;
   const issueIdentifier = ('deployment.issue.identifier' in labels) ? labels['deployment.issue.identifier'] : null;
   const issueUrl = ('deployment.issue.url' in labels) ? labels['deployment.issue.url'] : null;
@@ -50,6 +50,8 @@ const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTim
     message.appGroup = appGroup;
   if (creationTime)
     message.creationTime = creationTime;
+  if (healthy !== undefined)
+    message.healthStatus = (healthy) ? 'healthy' : 'unhealthy';
 
   publisher.publishDeploymentUpdate(message);
 };
@@ -74,8 +76,14 @@ dockerClient.listContainers(listOptions, (err, containers : ContainerInfo[]) => 
 
   containers.forEach((container : ContainerInfo) => {
     let labels : any = container.Labels;
+    let healthy = undefined;
     console.log("See container!", container);
-    processContainerEvent("UP", labels, container.Created);
+    if (container.Status.indexOf("(healthy)") > -1)
+      healthy = true;
+    else if (container.Status.indexOf("(unhealthy)") > -1)
+      healthy = false;
+
+    processContainerEvent("UP", labels, container.Created, healthy);
   });
 });
 

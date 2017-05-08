@@ -8,16 +8,9 @@ import {Actions, DeploymentState} from "../reducers/deployments";
 import { Store } from "@ngrx/store";
 import { State } from "../reducers";
 import {Deployment} from "../../../../shared/deployment.model";
-import {SourceCodeUpdateEvent} from "../../../../shared/events";
+import {SourceCodeUpdateEvent, DeploymentUpdateEvent} from "../../../../shared/events";
 import {Http} from "@angular/http";
 
-
-export interface DeploymentUpdateEvent {
-  status : 'UP' | 'DOWN';
-  name : string;
-  url : string;
-  issueDetails : { identifier : string, url : string };
-}
 
 @Injectable()
 export class DeploymentService {
