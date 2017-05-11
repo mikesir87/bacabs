@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Deployment} from "../../../../shared/deployment.model";
 
 @Component({
@@ -17,7 +17,7 @@ import {Deployment} from "../../../../shared/deployment.model";
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let deployment of deployments">
+        <tr *ngFor="let deployment of sortedDeployments">
           <td>
             <span *ngIf="deployment.status == 'UP'; else deploymentDown">
               <span *ngIf="deployment.healthStatus == 'unhealthy'; else deploymentLink">{{ deployment.name }}</span>
@@ -62,8 +62,17 @@ import {Deployment} from "../../../../shared/deployment.model";
     </table>
   `
 })
-export class DeploymentGroupDisplayComponent {
+export class DeploymentGroupDisplayComponent implements OnChanges {
   @Input() name: string;
   @Input() deployments : Deployment[];
+  sortedDeployments : Deployment[];
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!('deployments' in changes))
+      return;
+
+    this.sortedDeployments = changes.deployments.currentValue
+      .sort((a, b) => a.name < b.name ? -1 : 1);
+  }
 }
