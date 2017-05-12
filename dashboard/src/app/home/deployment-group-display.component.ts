@@ -21,15 +21,15 @@ import {Deployment} from "../../../../shared/deployment.model";
           <td>
             <span *ngIf="deployment.status == 'UP'; else deploymentDown">
               <span *ngIf="deployment.healthStatus == 'unhealthy'; else deploymentLink">{{ deployment.name }}</span>
-              <template #deploymentLink>
+              <ng-template #deploymentLink>
                 <a [href]="deployment.url" target="_blank">{{ deployment.name }}</a>
-              </template>
+              </ng-template>
             </span>
             
-            <template #deploymentDown>
+            <ng-template #deploymentDown>
               {{ deployment.name }}
               <i class="fa fa-exclamation-triangle text-danger" *ngIf="deployment.status == 'DOWN'"></i>
-            </template>
+            </ng-template>
           </td>
           
           <td>
@@ -45,7 +45,7 @@ import {Deployment} from "../../../../shared/deployment.model";
             <span *ngIf="deployment.issue; else noIssueUrl">
               <a [href]="deployment.issue.url" target="_blank">{{ deployment.issue.identifier }}</a>
             </span>
-            <template #noIssueUrl>--</template>
+            <ng-template #noIssueUrl>--</ng-template>
           </td>
           <td>
             <span *ngIf="deployment.issue">
