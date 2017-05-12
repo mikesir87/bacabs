@@ -16,4 +16,9 @@ new RedisListener.RedisListener(deploymentService);
 
 wss.on("connection", function (ws) {
     console.log("-- A new user has connected!");
+
+    ws.on("message", function(message) {
+      if (message == "PING")
+        ws.send("PONG");
+    });
 });

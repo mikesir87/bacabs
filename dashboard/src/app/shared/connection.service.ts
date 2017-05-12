@@ -20,8 +20,8 @@ export interface IncomingEvent {
 export class ConnectionService {
 
     private webSocket : ReconnectingWebSocket;
-
     private subject : Subject<any>;
+    private pingTimer : any;
 
     constructor(private store: Store<State>) {
         const protocol = window.location.protocol.replace("http", "ws");
@@ -48,15 +48,23 @@ export class ConnectionService {
     private onOpen() {
         console.log("WebSocket connection opened");
         this.store.dispatch({ type : Actions.SET_STATUS, payload: true });
+        this.pingTimer = setInterval(() => this.sendPing(), 30000);
     }
 
     private onClose() {
         console.log("WebSocket connection closed");
         this.store.dispatch({ type : Actions.SET_STATUS, payload: false });
+        clearInterval(this.pingTimer);
     }
 
     private onMessage(messageData : MessageEvent) {
         console.log("Message received", messageData.data);
+        if (messageData.data == "PONG")
+          return;
         this.subject.next(JSON.parse(messageData.data) as IncomingEvent);
+    }
+
+    private sendPing() {
+      this.webSocket.send("PING");
     }
 }
