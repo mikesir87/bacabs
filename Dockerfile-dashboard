@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=node-frontend-build /app/package.json /app
 RUN npm install --production
 COPY --from=node-frontend-build /shared /shared
-COPY --from=node-backend-build /app/dist/dashboard-backend/src /app/server
+COPY --from=node-backend-build /app/dist/app/src /app/server
 COPY --from=node-frontend-build /app/dist/ /app/dist
 CMD node /app/server/index.js
 
