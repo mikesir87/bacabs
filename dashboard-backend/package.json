@@ -1,0 +1,30 @@
+{
+  "name": "dashboard-backend",
+  "version": "1.0.0",
+  "description": "Component that displays the dashboard and provides an API to get deployments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently 'npm run watch' 'npm run serve'",
+    "serve": "nodemon --watch dist dist/app/src/index.js",
+    "start": "tsc index.ts && node dist/app/src/index.js",
+    "watch": "tsc -w",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "http": "0.0.0",
+    "redis": "^2.7.1",
+    "ws": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.18",
+    "concurrently": "^3.4.0",
+    "nodemon": "^1.11.0",
+    "typescript": "^2.1.4"
+  }
+}
