@@ -31,6 +31,17 @@ services:
       - "traefik.frontend.rule=Host:localhost"
       - "traefik.port=4200"
 
+  dashboard-backend:
+    build:
+      context: ./dashboard-backend
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./dashboard-backend:/app:rw,cached
+      - ./shared:/shared:rw,cached
+    networks:
+      - qa-backend
+      - qa-application
+
   redis:
     image: redis:3.0
     command: redis-server --appendonly yes

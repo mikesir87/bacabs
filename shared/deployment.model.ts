@@ -3,6 +3,7 @@ export interface Deployment {
   name: string;
   url: string;
   creationTime: number;
+  appGroup?: string;
   status: 'UP' | 'DOWN' | 'UNKNOWN';
   issue?: IssueDetails;
   lastCommit: LastCommit;

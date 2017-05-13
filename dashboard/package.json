@@ -4,10 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "dev": "concurrently \"npm run ng-server\" \"npm run backend-server\"",
-    "ng-server": "ng serve --host 0.0.0.0 --proxy-config server-proxy-config.json",
-    "backend-server": "nodemon --watch server server/index.js",
-    "start": "webpack-dev-server --port=4200",
+    "dev": "ng serve --host 0.0.0.0 --proxy-config server-proxy-config.json",
+    "startttttt": "webpack-dev-server --port=4200",
     "build": "webpack",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
