@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  cert-builder:
+    image: alpine:3.5
+    command: sh -c 'apk --update --no-cache add openssl && openssl req -x509 -days 730 -nodes -out /src/cert.pem -keyout /src/key.pem -config /src/cert_defaults.txt'
+    volumes:
+      - ./:/src

@@ -8,7 +8,7 @@ services:
       - "80:80"
       - "8080:8080"
     networks:
-      - qa-application
+      - bacabs-frontend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/null:/traefik.toml
@@ -23,8 +23,8 @@ services:
       - ./dashboard:/app:rw,cached
       - ./shared:/shared:rw,cached
     networks:
-      - qa-application
-      - qa-backend
+      - bacabs-frontend
+      - bacabs-backend
     labels:
       - "traefik.backend=bacabs"
       - "traefik.docker.network=qa-application"
@@ -39,14 +39,13 @@ services:
       - ./dashboard-backend:/app:rw,cached
       - ./shared:/shared:rw,cached
     networks:
-      - qa-backend
-      - qa-application
+      - bacabs-backend
 
   redis:
     image: redis:3.0
     command: redis-server --appendonly yes
     networks:
-      - qa-backend
+      - bacabs-backend
     volumes:
       - redis_data:/data
 
@@ -59,23 +58,7 @@ services:
       - ./docker-event-watcher:/app:rw,cached
       - ./shared:/shared:rw,cached
     networks:
-      - qa-backend
-
-  gitlab-webhook-receiver:
-    build:
-      context: ./gitlab-webhook-receiver/
-      dockerfile: Dockerfile-dev
-    volumes:
-      - ./gitlab-webhook-receiver:/app:rw,cached
-      - ./shared:/shared:rw,cached
-    networks:
-      - qa-application
-      - qa-backend
-    labels:
-      - "traefik.backend=gitlab"
-      - "traefik.docker.network=qa-application"
-      - "traefik.frontend.rule=Host:gitlab.localhost"
-      - "traefik.port=80"
+      - bacabs-backend
 
 volumes:
   shared:
@@ -85,7 +68,7 @@ volumes:
     driver: local
 
 networks:
-  qa-application:
+  bacabs-frontend:
     external: true
-  qa-backend:
+  bacabs-backend:
     driver: overlay

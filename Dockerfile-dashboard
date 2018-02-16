@@ -10,6 +10,7 @@ RUN npm run ng build --prod
 
 # Build the backend
 FROM node:7.9 AS node-backend-build
+EXPOSE 3000
 WORKDIR /app
 COPY ./dashboard-backend/package.json /app
 RUN npm install

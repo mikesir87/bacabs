@@ -4,7 +4,7 @@ export interface Deployment {
   url: string;
   creationTime: number;
   appGroup?: string;
-  status: 'UP' | 'DOWN' | 'UNKNOWN';
+  status: 'UP' | 'DOWN' | 'UNKNOWN' | 'UPDATING';
   issue?: IssueDetails;
   lastCommit: LastCommit;
   healthStatus? : 'healthy' | 'unhealthy';

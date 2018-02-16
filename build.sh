@@ -35,7 +35,6 @@ fi
 
 docker build -t bacabs/dashboard:$TAG -f Dockerfile-dashboard .
 docker build -t bacabs/docker-event-watcher:$TAG -f Dockerfile-docker-event-watcher .
-docker build -t bacabs/gitlab-webhook-receiver:$TAG -f Dockerfile-gitlab-webhook-receiver .
 
 
 if [ $PUSH = "yes" ]; then

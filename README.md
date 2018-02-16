@@ -6,9 +6,9 @@
 
   ```docker swarm init```
 
-- An attachable overlay network named `qa-application`. This network will be the one that Traefik will be sending traffic on.  Only applications on this network will be able to receive traffic.
+- An attachable overlay network named `bacabs-frontend`. This network will be the one that Traefik will be sending traffic on.  Only applications on this network will be able to receive traffic.
 
-  ```docker network create -d overlay --attachable qa-application```
+  ```docker network create -d overlay --attachable bacabs-frontend```
 
 
  

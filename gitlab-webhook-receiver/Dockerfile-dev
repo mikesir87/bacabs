@@ -1,5 +1,0 @@
-FROM node:7.2
-
-WORKDIR /app
-
-CMD npm install && npm start
