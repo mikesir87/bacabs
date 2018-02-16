@@ -1,8 +1,8 @@
-import Dockerode from 'dockerode-ts';
+import * as Dockerode from 'dockerode';
 const dockerClient = new Dockerode();
 import { publisher } from './publisher';
 import {DeploymentUpdateEvent, HealthStatusUpdate} from "../shared/events";
-import {ContainerInfo} from "dockerode-ts";
+import {ContainerInfo} from "dockerode";
 
 const labelArray = [
   'deployment.name', 'deployment.url', 'deployment.vcs.ref'

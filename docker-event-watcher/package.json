@@ -14,7 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dockerode-ts": "^0.3.2",
+    "@types/dockerode": "^2.5.3",
+    "dockerode": "^2.5.3",
     "redis": "^2.6.3"
   },
   "devDependencies": {
