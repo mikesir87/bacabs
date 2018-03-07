@@ -1,8 +1,9 @@
 import * as Dockerode from 'dockerode';
 const dockerClient = new Dockerode();
 import { publisher } from './publisher';
-import {DeploymentUpdateEvent, HealthStatusUpdate} from "../shared/events";
-import {ContainerInfo} from "dockerode";
+import {DeploymentUpdateEvent} from "../shared/events";
+import {ServiceImpl} from "./src/Service";
+import {ServiceManagerImpl} from "./src/ServiceManager";
 
 const labelArray = [
   'deployment.name', 'deployment.url', 'deployment.vcs.ref'
@@ -10,17 +11,8 @@ const labelArray = [
 
 const eventStreamOptions = {
   filters: {
-    type: ['container'],
-    event: ['die', 'start'],
-    label: labelArray
-  }
-};
-
-const healthCheckEventStreamOptions = {
-  filters: {
-    type: ['container'],
-    event: ['health_status'],
-    label: labelArray
+    type: ['service'],
+    label : labelArray,
   }
 };
 
@@ -56,64 +48,36 @@ const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTim
   publisher.publishDeploymentUpdate(message);
 };
 
-const processHealthStatusEvent = (healthStatus : string, name : string, appGroup? : string) => {
-  const status = (healthStatus == 'health_status: healthy') ? 'healthy' : 'unhealthy';
+setInterval(() => {
+  console.log("************ STARTING POLL *******************");
+  ServiceManagerImpl.pollServices()
+    .then(() => console.log("Done polling services!"))
+    .then(() => console.log("New services", ServiceManagerImpl.getServices()))
+    .catch((e) => console.log("Caught something", e));
+}, 5000);
 
-  const message : HealthStatusUpdate = {
-    status,
-    deployment: { name }
-  };
+// dockerClient.listServices(listOptions)
+//   .then((dockerServices) => {
+//     console.log("See the following services", JSON.stringify(dockerServices, null, 2));
+//     console.log("******************************************");
+//     dockerServices.forEach(service => {
+//       dockerClient.getService(service.Spec.Name).inspect()
+//         .then(serviceDetails => services.push(new ServiceImpl(serviceDetails)));
+//     });
+//   });
 
-  if (appGroup)
-    message.deployment.appGroup = appGroup;
 
-  publisher.publishHealthStatusUpdate(message);
-};
+dockerClient.getEvents(eventStreamOptions)
+  .then((stream) => {
+    console.log("Listening for Docker events for services using filter: ", JSON.stringify(eventStreamOptions));
+    stream.setEncoding('utf8');
 
+    stream.on('data', function(chunk) {
+      let data = JSON.parse(chunk.toString());
+      console.log("Received service event", data);
+      // const action = (data.Action == 'start') ? 'UP' : 'DOWN';
+      // processContainerEvent(action, data.Actor.Attributes, action == 'UP' ? data.time : null);
+    });
 
-dockerClient.listContainers(listOptions, (err, containers : ContainerInfo[]) => {
-  if (err) return console.error(err.message, err);
-
-  containers.forEach((container : ContainerInfo) => {
-    let labels : any = container.Labels;
-    let healthy = undefined;
-    console.log("See container!", container);
-    if (container.Status.indexOf("(healthy)") > -1)
-      healthy = true;
-    else if (container.Status.indexOf("(unhealthy)") > -1)
-      healthy = false;
-
-    processContainerEvent("UP", labels, container.Created, healthy);
+    stream.on('close', () => console.warn("Connection listening to container start/stop events has closed"));
   });
-});
-
-
-dockerClient.getEvents(eventStreamOptions, function(err, stream) {
-  if (err) return console.error(err.message, err);
-  console.log("Listening for Docker events for container starts/stops");
-  stream.setEncoding('utf8');
-
-  stream.on('data', function(chunk) {
-    let data = JSON.parse(chunk.toString());
-    console.log("Received container event", chunk);
-    const action = (data.Action == 'start') ? 'UP' : 'DOWN';
-    processContainerEvent(action, data.Actor.Attributes, action == 'UP' ? data.time : null);
-  });
-
-  stream.on('close', () => console.warn("Connection listening to container start/stop events has closed"));
-});
-
-
-dockerClient.getEvents(healthCheckEventStreamOptions, (err, stream) => {
-  if (err) return console.error(err.message, err);
-  console.log("Listening to Docker events for health status changes");
-  stream.setEncoding('utf8');
-
-  stream.on('data', (chunk) => {
-    const data = JSON.parse(chunk.toString());
-    console.log("Received health status event", chunk);
-    processHealthStatusEvent(data.status, data.Actor.Attributes['deployment.name'], data.Actor.Attributes['deployment.appGroup']);
-  });
-
-  stream.on('close', () => console.warn("Connection listening to health status changes has closed"));
-});
