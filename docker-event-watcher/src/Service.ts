@@ -13,6 +13,8 @@ export interface Service {
 export class ServiceImpl implements Service {
 
   private id : string;
+  private status : "HEALTHY" | "UPDATING" | "ERROR";
+  private statusMessage : string;
   private serviceName : string;
   private stackName : string;
   private replicas : number;
@@ -26,9 +28,7 @@ export class ServiceImpl implements Service {
   }
 
   update(serviceDetails : any) : boolean {
-    //console.log("Updating with", JSON.stringify(serviceDetails, null, 2));
-
-    const hasChange = (
+    let hasChange = (
         this.id != serviceDetails.ID ||
         this.serviceName != serviceDetails.Spec.Name ||
         this.stackName != serviceDetails.Spec.Labels["com.docker.stack.namespace"] ||
@@ -41,6 +41,20 @@ export class ServiceImpl implements Service {
     this.stackName = serviceDetails.Spec.Labels["com.docker.stack.namespace"];
     this.image = serviceDetails.Spec.TaskTemplate.ContainerSpec.Image;
     this.replicas = serviceDetails.Spec.Mode.Replicated.Replicas;
+
+    const oldStatus = this.status;
+    const oldStatusMessage = this.statusMessage;
+
+    if (serviceDetails.UpdateStatus === undefined || serviceDetails.UpdateStatus.State == "completed") {
+      this.status = "HEALTHY";
+      this.statusMessage = "";
+    }
+    else {
+      this.status = (serviceDetails.UpdateStatus.State == "updating") ? "UPDATING" : "ERROR";
+      this.statusMessage = serviceDetails.UpdateStatus.Message;
+    }
+
+    hasChange = hasChange || (oldStatus != this.status || oldStatusMessage != this.statusMessage);
 
     this.labels = serviceDetails.Spec.Labels;
 
