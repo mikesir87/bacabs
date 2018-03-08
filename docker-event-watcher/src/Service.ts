@@ -7,6 +7,7 @@ export interface Service {
   getRunningTasks() : number;
   getImage() : string;
   setNumRunningTasks(num : number) : void;
+  update(serviceDetails : any) : void;
 }
 
 export class ServiceImpl implements Service {
@@ -17,19 +18,23 @@ export class ServiceImpl implements Service {
   private replicas : number;
   private runningTasks : number;
   private image : string;
+  private labels : { string : string };
 
   constructor(serviceDetails : any) {
     this.update(serviceDetails);
-    // console.log(`Created new service with { ID: ${this.getId()}, name: ${this.getServiceName()}, stackName: ${this.getStackName()} }`);
   }
 
   update(serviceDetails : any) {
+    //console.log("Updating with", JSON.stringify(serviceDetails, null, 2));
+
     this.id = serviceDetails.ID;
     this.serviceName = serviceDetails.Spec.Name;
     this.stackName = serviceDetails.Spec.Labels["com.docker.stack.namespace"];
     this.image = serviceDetails.Spec.TaskTemplate.ContainerSpec.Image;
     this.replicas = serviceDetails.Spec.Mode.Replicated.Replicas;
     this.runningTasks = 0;
+
+    this.labels = serviceDetails.Spec.Labels;
   }
 
   getId(): string {

@@ -16,6 +16,14 @@ export interface ServiceManager {
    */
   pollServices() : Promise<any>;
 
+  /**
+   * Update the state for a specific service.
+   * Use case is when an event is received to indicate a service has been updated,
+   * that service needs to be fully updated.
+   * @param {string} serviceId The id of the service
+   * @returns {Promise<any>} A promise resolved when the update is complete
+   */
+  pollService(serviceId : string) : Promise<any>;
 }
 
 export const ServiceManagerImpl = DockerServiceManager;

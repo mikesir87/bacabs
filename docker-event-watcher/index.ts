@@ -12,7 +12,7 @@ const labelArray = [
 const eventStreamOptions = {
   filters: {
     type: ['service'],
-    label : labelArray,
+    // label : labelArray,
   }
 };
 
@@ -48,23 +48,19 @@ const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTim
   publisher.publishDeploymentUpdate(message);
 };
 
-setInterval(() => {
-  console.log("************ STARTING POLL *******************");
-  ServiceManagerImpl.pollServices()
-    .then(() => console.log("Done polling services!"))
-    .then(() => console.log("New services", ServiceManagerImpl.getServices()))
-    .catch((e) => console.log("Caught something", e));
-}, 5000);
+poll();
 
-// dockerClient.listServices(listOptions)
-//   .then((dockerServices) => {
-//     console.log("See the following services", JSON.stringify(dockerServices, null, 2));
-//     console.log("******************************************");
-//     dockerServices.forEach(service => {
-//       dockerClient.getService(service.Spec.Name).inspect()
-//         .then(serviceDetails => services.push(new ServiceImpl(serviceDetails)));
-//     });
-//   });
+async function poll() {
+  try {
+    await ServiceManagerImpl.pollServices();
+    console.log(`Completed poll of services (${new Date()})`);
+  }
+  catch (e) {
+    console.error("Caught an error while polling", e);
+  }
+
+  setTimeout(() => poll(), 30000);
+}
 
 
 dockerClient.getEvents(eventStreamOptions)
@@ -74,9 +70,9 @@ dockerClient.getEvents(eventStreamOptions)
 
     stream.on('data', function(chunk) {
       let data = JSON.parse(chunk.toString());
-      console.log("Received service event", data);
-      // const action = (data.Action == 'start') ? 'UP' : 'DOWN';
-      // processContainerEvent(action, data.Actor.Attributes, action == 'UP' ? data.time : null);
+      console.log("Received service event ", JSON.stringify(data));
+
+      ServiceManagerImpl.pollService(data.Actor.ID);
     });
 
     stream.on('close', () => console.warn("Connection listening to container start/stop events has closed"));
