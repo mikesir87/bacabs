@@ -26,4 +26,4 @@ export interface ServiceManager {
   pollService(serviceId : string) : Promise<any>;
 }
 
-export const ServiceManagerImpl = DockerServiceManager;
+export const ServiceManagerImpl : ServiceManager = DockerServiceManager;

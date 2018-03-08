@@ -2,8 +2,8 @@ import * as Dockerode from 'dockerode';
 const dockerClient = new Dockerode();
 import { publisher } from './publisher';
 import {DeploymentUpdateEvent} from "../shared/events";
-import {ServiceImpl} from "./src/Service";
 import {ServiceManagerImpl} from "./src/ServiceManager";
+import {ServiceEventBus, ServiceEventBusImpl} from "./src/ServiceEventBus";
 
 const labelArray = [
   'deployment.name', 'deployment.url', 'deployment.vcs.ref'
@@ -49,6 +49,10 @@ const processContainerEvent = (status : 'UP' | 'DOWN', labels : any, creationTim
 };
 
 poll();
+ServiceEventBusImpl.onServiceCreation((service) => console.log(`Created service with id ${service.getId()}`));
+ServiceEventBusImpl.onServiceRemoval((service) => console.log(`Removed service with id ${service.getId()}`));
+
+//ServiceChangeBusImpl.onServiceCreation((service) => console.log(`Created service with id ${service.getId()}`));
 
 async function poll() {
   try {
