@@ -28,6 +28,14 @@ export interface ServiceRepo {
   updateService(serviceId : string, serviceDetails : any) : Service;
 
   /**
+   * Update the number of tasks running on a service
+   * @param {string} serviceId The id of the service
+   * @param {number} numTasksRunning The number of running tasks on the service
+   * @returns {Service} The updated service
+   */
+  updateTasksOnService(serviceId : string, numTasksRunning : number) : Service;
+
+  /**
    * Get all services known to the system
    * @returns {Service[]} All services
    */

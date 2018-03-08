@@ -56,7 +56,7 @@ class DockerServiceManager implements ServiceManager {
       }, {});
 
     Object.keys(tasks).forEach(serviceId => {
-      this.serviceRepo.getService(serviceId).setNumRunningTasks(tasks[serviceId].length);
+      this.serviceRepo.updateTasksOnService(serviceId, tasks[serviceId].length);
     });
 
     this.serviceRepo.getServices().forEach(s => {

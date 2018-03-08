@@ -27,8 +27,22 @@ class ServiceRepoImpl implements ServiceRepo, ServiceEventBus {
 
   updateService(serviceId: string, serviceDetails: any): Service {
     const service = this.getService(serviceId);
-    service.update(serviceDetails);
-    this.eventEmitter.emit(EVENT_SERVICE_UPDATED, service);
+
+    if (service.update(serviceDetails)) {
+      this.eventEmitter.emit(EVENT_SERVICE_UPDATED, service);
+    }
+
+    return service;
+  }
+
+  updateTasksOnService(serviceId: string, numTasksRunning: number): Service {
+    const service = this.getService(serviceId);
+
+    if (service.getRunningTasks() != numTasksRunning) {
+      service.setNumRunningTasks(numTasksRunning);
+      this.eventEmitter.emit(EVENT_SERVICE_UPDATED, service);
+    }
+
     return service;
   }
 

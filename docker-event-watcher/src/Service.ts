@@ -7,7 +7,7 @@ export interface Service {
   getRunningTasks() : number;
   getImage() : string;
   setNumRunningTasks(num : number) : void;
-  update(serviceDetails : any) : void;
+  update(serviceDetails : any) : boolean;
 }
 
 export class ServiceImpl implements Service {
@@ -22,19 +22,29 @@ export class ServiceImpl implements Service {
 
   constructor(serviceDetails : any) {
     this.update(serviceDetails);
+    this.runningTasks = 0;
   }
 
-  update(serviceDetails : any) {
+  update(serviceDetails : any) : boolean {
     //console.log("Updating with", JSON.stringify(serviceDetails, null, 2));
+
+    const hasChange = (
+        this.id != serviceDetails.ID ||
+        this.serviceName != serviceDetails.Spec.Name ||
+        this.stackName != serviceDetails.Spec.Labels["com.docker.stack.namespace"] ||
+        this.image != serviceDetails.Spec.TaskTemplate.ContainerSpec.Image ||
+        this.replicas != serviceDetails.Spec.Mode.Replicated.Replicas
+    );
 
     this.id = serviceDetails.ID;
     this.serviceName = serviceDetails.Spec.Name;
     this.stackName = serviceDetails.Spec.Labels["com.docker.stack.namespace"];
     this.image = serviceDetails.Spec.TaskTemplate.ContainerSpec.Image;
     this.replicas = serviceDetails.Spec.Mode.Replicated.Replicas;
-    this.runningTasks = 0;
 
     this.labels = serviceDetails.Spec.Labels;
+
+    return hasChange;
   }
 
   getId(): string {
@@ -61,7 +71,7 @@ export class ServiceImpl implements Service {
     return this.image;
   }
 
-  setNumRunningTasks(num: number): void {
+  setNumRunningTasks(num : number): void {
     this.runningTasks = num;
   }
 
