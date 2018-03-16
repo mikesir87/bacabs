@@ -1,6 +1,8 @@
 
 export interface Service {
   getId() : string;
+  getStatus() : "HEALTHY" | "UPDATING" | "ERROR";
+  getStatusMessage() : string;
   getServiceName() : string;
   getStackName() : string;
   getReplicas() : number;
@@ -63,6 +65,14 @@ export class ServiceImpl implements Service {
 
   getId(): string {
     return this.id;
+  }
+
+  getStatus() {
+    return this.status;
+  }
+
+  getStatusMessage(): string {
+    return this.statusMessage;
   }
 
   getServiceName(): string {

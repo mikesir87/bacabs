@@ -21,6 +21,9 @@ class DockerServiceManager implements ServiceManager {
   async pollService(serviceId: string): Promise<any> {
     try {
       const serviceDetails = await this.dockerClient.inspectService(serviceId);
+      if (serviceDetails.Spec.Labels["deployment.name"] === undefined)
+        return;
+
       let service = this.serviceRepo.getService(serviceDetails.ID);
       if (service === null)
         service = this.serviceRepo.createService(serviceDetails);
