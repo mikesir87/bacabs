@@ -3,6 +3,7 @@ export const CHANNELS = {
   VCS_UPDATES : "vcs-updates",
   DEPLOYMENTS : "deployment-updates",
   HEALTH_STATUS : "health-status-updates",
+  SERVICES : "services",
 };
 
 export interface SourceCodeUpdateEvent {
