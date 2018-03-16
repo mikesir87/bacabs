@@ -21,6 +21,12 @@ export interface DockerClient {
    */
   listRunningTasks() : Promise<any>;
 
+  /**
+   * Get all service events on a stream
+   * @returns {Promise<NodeJS.ReadableStream>}
+   */
+  getEvents() : Promise<NodeJS.ReadableStream>;
+
 }
 
-export const DockerClientImpl = DockerodeDockerClient;
+export const DockerClientImpl : DockerClient = DockerodeDockerClient;

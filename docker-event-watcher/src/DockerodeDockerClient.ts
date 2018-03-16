@@ -41,6 +41,15 @@ class DockerodeDockerClient implements DockerClient {
       })
       .then(tasks => tasks.filter(t => t.Status.State == 'running'));
   }
+
+
+  getEvents(): Promise<NodeJS.ReadableStream> {
+    return this.dockerClient.getEvents({ filters : { type : ['service'] } })
+      .then((stream) => {
+        stream.setEncoding('utf8');
+        return stream;
+      });
+  }
 }
 
 export default new DockerodeDockerClient();
