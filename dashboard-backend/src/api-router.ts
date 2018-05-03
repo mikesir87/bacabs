@@ -1,22 +1,23 @@
 import * as express from "express";
-import {DeploymentService} from "./deployment-service";
+import {ServiceManager} from "./ServiceManager";
+import {ServiceManagerImpl} from "./ServiceManagerImpl";
 
 
 export class ApiRouter {
 
   private router : express.Router;
 
-  constructor(private deploymentService : DeploymentService) {
+  constructor(private serviceManager : ServiceManager = ServiceManagerImpl) {
     this.configRoutes();
   }
 
   configRoutes() {
     this.router = express.Router();
-    this.router.get("/deployments", this.getDeployments.bind(this));
+    this.router.get("/services", this.getServices.bind(this));
   }
 
-  getDeployments(req: express.Request, res: express.Response) {
-    res.send(this.deploymentService.getDeployments());
+  getServices(req: express.Request, res: express.Response) {
+    res.send(this.serviceManager.getServices());
   }
 
   getRouter() {
