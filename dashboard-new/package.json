@@ -1,0 +1,31 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.0",
+    "less": "^3.0.1",
+    "nodemon": "^1.17.2",
+    "npm-run-all": "^4.1.2",
+    "prop-types": "^15.6.1",
+    "react": "^16.1.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.1.0",
+    "react-redux": "^5.0.6",
+    "react-scripts": "1.0.17",
+    "reconnecting-websocket": "^3.2.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "whatwg-fetch": "^2.0.4"
+  },
+  "scripts": {
+    "build-css": "lessc src/assets/styles.less src/assets/styles.css",
+    "watch-css": "nodemon --exec \"yarn run build-css\" --watch src/assets -e less",
+    "start-js": "react-scripts start",
+    "start": "NODE_PATH=./src npm-run-all -p watch-css start-js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "dev": "yarn run start"
+  }
+}

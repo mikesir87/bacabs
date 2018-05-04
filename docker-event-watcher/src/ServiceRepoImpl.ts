@@ -37,6 +37,8 @@ class ServiceRepoImpl implements ServiceRepo, ServiceEventBus {
 
   updateTasksOnService(serviceId: string, numTasksRunning: number): Service {
     const service = this.getService(serviceId);
+    if (service === null)
+      return;
 
     if (service.getRunningTasks() != numTasksRunning) {
       service.setNumRunningTasks(numTasksRunning);

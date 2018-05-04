@@ -1,11 +1,13 @@
 # Build the frontend
 FROM node:7.9 AS node-frontend-build
 WORKDIR /app
-COPY ./dashboard/package.json /app
-RUN npm install
-COPY ./dashboard /app/
+COPY ./dashboard-new/package.json /app
+COPY ./dashboard-new/yarn.lock /app
+RUN yarn install
+COPY ./dashboard-new/public /app/public/
+COPY ./dashboard-new/src /app/src/
 COPY ./shared /shared
-RUN npm run ng build --prod
+RUN npm run build
 
 
 # Build the backend
@@ -22,10 +24,10 @@ RUN npm run build
 FROM node:7.9-alpine
 EXPOSE 3000
 WORKDIR /app
-COPY --from=node-frontend-build /app/package.json /app
+COPY --from=node-backend-build /app/package.json /app
 RUN npm install --production
 COPY --from=node-frontend-build /shared /shared
 COPY --from=node-backend-build /app/dist/app/src /app/server
-COPY --from=node-frontend-build /app/dist/ /app/dist
+COPY --from=node-frontend-build /app/build/ /app/dist
 CMD node /app/server/index.js
 

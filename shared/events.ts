@@ -1,9 +1,14 @@
 
 export const CHANNELS = {
-  VCS_UPDATES : "vcs-updates",
   DEPLOYMENTS : "deployment-updates",
   HEALTH_STATUS : "health-status-updates",
   SERVICES : "services",
+};
+
+export const EVENT_TYPE = {
+  SERVICE_CREATED : "SERVICE_CREATED",
+  SERVICE_UPDATED : "SERVICE_UPDATED",
+  SERVICE_REMOVED : "SERVICE_REMOVED",
 };
 
 export interface SourceCodeUpdateEvent {

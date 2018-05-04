@@ -1,21 +1,32 @@
-version: '2'
+version: '3.4'
 
 services:
   app:
-    build:
-      context: ./
-      dockerfile: Dockerfile-sample 
-    labels:
-      - "deployment.name=api"
-      - "deployment.url=http://api.docker.localhost/"
-      - "deployment.issue.identifier=ISSUE-1234"
-      - "deployment.issue.url=https://some.jira.instace/browse/ISSUE-1234"
-      - "deployment.vcs.ref=refs/heads/ISSUE-1234"
-      - "traefik.backend=crest-4117"
-      - "traefik.frontend.rule=Host:api.docker.localhost"
-      - "traefik.port=80"
+    image: nginx-with-curl
+    deploy:
+      labels:
+        deployment.name: api
+        deployment.url: http://api.docker.localhost/
+        deployment.issue.identifier: ISSUE-1234
+        deployment.issue.url: https://some.jira.instace/browse/ISSUE-1234
+        deployment.vcs.ref: refs/heads/ISSUE-1234
+        traefik.backend: crest-4117
+        traefik.frontend.rule: Host:api.docker.localhost
+        traefik.port: 80
+  app2:
+    image: nginx-with-curl
+    deploy:
+      labels:
+        deployment.name: app
+        deployment.url: http://app.docker.localhost/
+        deployment.issue.identifier: ISSUE-1234
+        deployment.issue.url: https://some.jira.instace/browse/ISSUE-1234
+        deployment.vcs.ref: refs/heads/ISSUE-1234
+        traefik.backend: crest-4117
+        traefik.frontend.rule: Host:app.docker.localhost
+        traefik.port: 80
 
 networks:
   default:
     external:
-      name: qa-application
+      name: bacabs-frontend

@@ -3,7 +3,7 @@ version: '3.2'
 services:
   traefik:
     image: traefik
-    command: --web --docker --logLevel=DEBUG
+    command: --web --docker
     ports:
       - "80:80"
       - "8080:8080"
@@ -14,22 +14,20 @@ services:
       - /dev/null:/traefik.toml
 
   dashboard:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile-dev
-    ports:
-      - "4200:4200"
+    image: node:latest
+    command: bash -c "yarn install && yarn run dev"
+    working_dir: /app
     volumes:
-      - ./dashboard:/app:rw,cached
+      - ./dashboard-new:/app:rw,cached
       - ./shared:/shared:rw,cached
     networks:
       - bacabs-frontend
       - bacabs-backend
     labels:
-      - "traefik.backend=bacabs"
-      - "traefik.docker.network=qa-application"
-      - "traefik.frontend.rule=Host:localhost"
-      - "traefik.port=4200"
+      traefik.backend: bacabs
+      traefik.docker.network: bacabs-frontend
+      traefik.frontend.rule: PathPrefix:/
+      traefik.port: "3000"
 
   dashboard-backend:
     build:
@@ -39,7 +37,13 @@ services:
       - ./dashboard-backend:/app:rw,cached
       - ./shared:/shared:rw,cached
     networks:
+      - bacabs-frontend
       - bacabs-backend
+    labels:
+      traefik.backend: bacabs-backend
+      traefik.docker.network: bacabs-frontend
+      traefik.frontend.rule: PathPrefix:/api,/events
+      traefik.port: "3000"
 
   redis:
     image: redis:3.0

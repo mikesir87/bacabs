@@ -40,5 +40,4 @@ docker build -t bacabs/docker-event-watcher:$TAG -f Dockerfile-docker-event-watc
 if [ $PUSH = "yes" ]; then
   docker push bacabs/dashboard:$TAG
   docker push bacabs/docker-event-watcher:$TAG
-  docker push bacabs/gitlab-webhook-receiver:$TAG
 fi
