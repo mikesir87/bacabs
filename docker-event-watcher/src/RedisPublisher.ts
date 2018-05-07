@@ -29,4 +29,10 @@ export class RedisPublisher implements Publisher {
     this.client.publish(CHANNELS.SERVICES, message);
   }
 
+  publishCurrentServices(services : Service[]) {
+    const message = JSON.stringify({ type : EVENT_TYPE.SERVICES_SET, payload : { services }});
+    console.log(`Publishing all current services`);
+    this.client.publish(CHANNELS.SERVICES, message);
+  }
+
 }

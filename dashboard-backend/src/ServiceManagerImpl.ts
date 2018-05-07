@@ -25,6 +25,22 @@ class DefaultServiceManager implements ServiceManager {
     return this.services;
   }
 
+  setServices(services: Service[]) {
+    // Add/update services as needed
+    services
+      .forEach((service) => {
+        if (this.services.find((s) => s.id === service.id) === undefined)
+          this.createService(service);
+        else
+          this.updateService(service)
+      });
+
+    // Remove local services no longer in the collection
+    this.services
+      .filter((service) => services.find((s) => s.id === service.id) === undefined)
+      .forEach((s) => this.removeService(s));
+  }
+
   createService(service : Service) {
     this.services = [ ...this.services, service ];
     this.eventEmitter.emit(EVENT_SERVICE_CREATED, service);

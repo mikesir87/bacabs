@@ -6,36 +6,27 @@ import {ServiceManagerImpl} from "./ServiceManagerImpl";
 import {ServiceManager} from "./ServiceManager";
 
 declare var process;
-
-const appServer = Server.start(process.env.PORT || 3000);
-
 const serviceManager : ServiceManager = ServiceManagerImpl;
 
+const appServer = Server.start(process.env.PORT || 3000);
 const wss = new WebSocket.Server({ server: appServer.server, path: "/events", perMessageDeflate: false });
-const apiRoutes = new ApiRouter(serviceManager);
-appServer.registerRoutes('/api', apiRoutes.getRouter());
+appServer.registerRoutes('/api', (new ApiRouter(serviceManager)).getRouter());
 new RedisListener(serviceManager);
 
-wss.on("connection", function (ws) {
+wss.on("connection", (ws) => {
     console.log("-- A new user has connected!");
-
-    ws.on("message", function(message) {
-      if (message == "PING")
-        ws.send("PONG");
+    ws.on("message", (message) => {
+      if (message == "PING") ws.send("PONG");
     });
 });
 
-serviceManager.onServiceCreation((service) => {
-  const model = JSON.stringify({ event : "service.created", payload : { service } });
-  wss.clients.forEach((client) => client.send(model));
-});
+serviceManager.onServiceCreation(createBroadcaster("service.created"));
+serviceManager.onServiceUpdate(createBroadcaster("service.updated"));
+serviceManager.onServiceRemoval(createBroadcaster("service.removed"));
 
-serviceManager.onServiceUpdate((service) => {
-  const model = JSON.stringify({ event : "service.updated", payload : { service } });
-  wss.clients.forEach((client) => client.send(model));
-});
-
-serviceManager.onServiceRemoval((service) => {
-  const model = JSON.stringify({ event : "service.removed", payload : { service } });
-  wss.clients.forEach((client) => client.send(model));
-});
+function createBroadcaster(eventType) {
+  return (service) => {
+    const model = JSON.stringify({ event : eventType, payload : { service } });
+    wss.clients.forEach((client) => client.send(model));
+  }
+}

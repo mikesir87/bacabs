@@ -20,6 +20,12 @@ export interface Publisher {
    * @param {Service} service The removed service
    */
   publishServiceRemoved(service : Service);
+
+  /**
+   * Publish the collection of all current services.
+   * @param {Service[]} services
+   */
+  publishCurrentServices(services : Service[]);
 }
 
 export const PublishImpl : Publisher = new RedisPublisher();

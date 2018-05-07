@@ -6,11 +6,16 @@ import {EventEmitter} from "events";
 const EVENT_SERVICE_CREATED = "service.created";
 const EVENT_SERVICE_UPDATED = "service.updated";
 const EVENT_SERVICE_REMOVED = "service.removed";
+const EVENT_SERVICES_SET = "services.set";
 
 class ServiceRepoImpl implements ServiceRepo, ServiceEventBus {
 
   private services : Service[] = [];
   private eventEmitter : EventEmitter = new EventEmitter();
+
+  constructor() {
+    setInterval(() => this.eventEmitter.emit(EVENT_SERVICES_SET, this.services), 15000);
+  }
 
   createService(serviceDetails: any): Service {
     const service = new ServiceImpl(serviceDetails);
@@ -70,6 +75,11 @@ class ServiceRepoImpl implements ServiceRepo, ServiceEventBus {
   onServiceRemoval(fn: (service: Service) => void): Function {
     this.eventEmitter.on(EVENT_SERVICE_REMOVED, fn);
     return () => { this.eventEmitter.removeListener(EVENT_SERVICE_REMOVED, fn )};
+  }
+
+  onServicesSet(fn: (services: Service[]) => void): Function {
+    this.eventEmitter.on(EVENT_SERVICES_SET, fn);
+    return () => { this.eventEmitter.removeListener(EVENT_SERVICES_SET, fn )};
   }
 
 }

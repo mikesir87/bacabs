@@ -22,6 +22,8 @@ export interface ServiceManager {
 
   removeService(service : Service);
 
+  setServices(services : Service[]);
+
   /**
    * Register a callback to fire whenever a service is created
    * @param {(service: Service) => void} fn The callback invoked, providing the new service

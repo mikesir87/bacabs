@@ -24,6 +24,12 @@ export interface ServiceEventBus {
    */
   onServiceRemoval(fn : (service : Service) => void) : Function;
 
+  /**
+   * Register a callback to be notified of periodic "current service collection heartbeats"
+   * @param {(services: Service[]) => void} fun The callback to be invoked
+   * @returns {Function} A de-registration function
+   */
+  onServicesSet(fun : (services : Service[]) => void) : Function;
 }
 
 export const ServiceEventBusImpl : ServiceEventBus = DefaultServiceRepo;

@@ -11,5 +11,6 @@ ServiceEventBusImpl.onServiceUpdate((service) => console.log(`Service update: ${
 ServiceEventBusImpl.onServiceCreation((service) => PublishImpl.publishServiceCreated(service));
 ServiceEventBusImpl.onServiceRemoval((service) => PublishImpl.publishServiceRemoved(service));
 ServiceEventBusImpl.onServiceUpdate((service) => PublishImpl.publishServiceUpdated(service));
+ServiceEventBusImpl.onServicesSet((services) => PublishImpl.publishCurrentServices(services));
 
 ServiceWatcherImpl.start();

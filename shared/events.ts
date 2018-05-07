@@ -9,6 +9,7 @@ export const EVENT_TYPE = {
   SERVICE_CREATED : "SERVICE_CREATED",
   SERVICE_UPDATED : "SERVICE_UPDATED",
   SERVICE_REMOVED : "SERVICE_REMOVED",
+  SERVICES_SET : "SERVICES_SET",
 };
 
 export interface SourceCodeUpdateEvent {

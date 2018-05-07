@@ -1,5 +1,5 @@
 import {ServiceWatcher} from "./ServiceWatcher";
-import {ServiceManagerImpl} from "./ServiceManager";
+import {ServiceManager, ServiceManagerImpl} from "./ServiceManager";
 import {DockerClient, DockerClientImpl} from "./DockerClient";
 
 /**
@@ -7,7 +7,8 @@ import {DockerClient, DockerClientImpl} from "./DockerClient";
  */
 export class ServiceWatcherImpl implements ServiceWatcher {
 
-  constructor(private dockerClient : DockerClient = DockerClientImpl) {}
+  constructor(private dockerClient : DockerClient = DockerClientImpl,
+              private serviceManager : ServiceManager = ServiceManagerImpl) {}
 
   start() {
     this.poll();
@@ -15,7 +16,7 @@ export class ServiceWatcherImpl implements ServiceWatcher {
   }
 
   async poll() {
-    try { await ServiceManagerImpl.pollServices(); }
+    try { await this.serviceManager.pollServices(); }
     catch (e) { console.error("Caught an error while polling", e); }
     setTimeout(() => this.poll(), 5000);
   }
@@ -23,11 +24,11 @@ export class ServiceWatcherImpl implements ServiceWatcher {
   listenToStreamEvents() {
     this.dockerClient.getEvents()
       .then((stream) => {
-        stream.on('data', function(chunk) {
+        stream.on('data', (chunk) => {
           let data = JSON.parse(chunk.toString());
           console.log("Received service event: ", JSON.stringify(data));
 
-          ServiceManagerImpl.pollService(data.Actor.ID);
+          return this.serviceManager.pollService(data.Actor.ID);
         });
 
         stream.on('close', () => {
