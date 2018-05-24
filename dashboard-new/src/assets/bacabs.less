@@ -2,7 +2,7 @@
   border-radius: 0;
 }
 
-.container-striped {
+.container {
   .row {
     border-top: 1px solid #ddd;
 
@@ -14,10 +14,6 @@
       &.hidden-lg {
         padding-bottom: 0;
       }
-    }
-
-    &:nth-of-type(2n) {
-      background-color: #f9f9f9;
     }
 
     &.row-header {
@@ -56,6 +52,10 @@
   text-overflow: ellipsis;
 }
 
-.stack-display {
-  margin-bottom: 30px;
+.stack-display:nth-of-type(2n + 1) .row {
+  background-color: #efefef;
+}
+
+.tooltip {
+  word-break: break-all;
 }

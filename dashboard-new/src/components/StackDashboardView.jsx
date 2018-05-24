@@ -3,6 +3,9 @@ import {Fragment} from "react";
 import {getServices} from "../actions/getServices";
 import {connect} from "react-redux";
 import StackDisplay from "./StackDisplay";
+import Grid from "react-bootstrap/es/Grid";
+import Row from "react-bootstrap/es/Row";
+import Col from "react-bootstrap/es/Col";
 
 class StackDashboardView extends React.Component {
 
@@ -24,14 +27,23 @@ class StackDashboardView extends React.Component {
       </Fragment>
 
     return (
-      <Fragment>
+      <Grid fluid>
+        <Row className={"row-header"}>
+          <Col sm={2}>Stack</Col>
+          <Col sm={2}>Component</Col>
+          <Col sm={2}>JIRA Issue</Col>
+          <Col sm={2}>Replicas</Col>
+          <Col sm={4}>Container Image</Col>
+        </Row>
+
         {
-          Object
-            .keys(stacks)
-            .sort((a, b) => a < b ? -1 : 1)
-            .map(stackName => <StackDisplay key={stackName} stackName={stackName} services={stacks[stackName]} />)}
-      </Fragment>
-    )
+            Object
+              .keys(stacks)
+              .sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1)
+              .map(stackName => <StackDisplay key={stackName} stackName={stackName} services={stacks[stackName]} />)
+        }
+      </Grid>
+    );
   }
 }
 

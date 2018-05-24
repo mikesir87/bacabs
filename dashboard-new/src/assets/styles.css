@@ -6092,24 +6092,21 @@ label {
 .navbar {
   border-radius: 0;
 }
-.container-striped .row {
+.container .row {
   border-top: 1px solid #ddd;
 }
-.container-striped .row > div[class*="col-"] {
+.container .row > div[class*="col-"] {
   padding-top: 12px;
   padding-bottom: 8px;
   word-wrap: break-word;
 }
-.container-striped .row > div[class*="col-"].hidden-lg {
+.container .row > div[class*="col-"].hidden-lg {
   padding-bottom: 0;
 }
-.container-striped .row:nth-of-type(2n) {
-  background-color: #f9f9f9;
-}
-.container-striped .row.row-header {
+.container .row.row-header {
   border-top: none;
 }
-.container-striped .row.row-header div[class*="col-"] {
+.container .row.row-header div[class*="col-"] {
   border-bottom-width: 1px;
   font-size: 12px;
   text-transform: uppercase;
@@ -6118,13 +6115,13 @@ label {
   padding-top: 12px;
   padding-bottom: 8px;
 }
-.container-striped .row.row-action > div[class*="col-"]:not(:last-child) {
+.container .row.row-action > div[class*="col-"]:not(:last-child) {
   padding-top: 16px;
 }
-.container-striped.no-header .row:first-child {
+.container.no-header .row:first-child {
   border-top: none;
 }
-.container-striped.container-hover .row:not(.row-header):hover {
+.container.container-hover .row:not(.row-header):hover {
   background-color: #f9f9f9;
 }
 .truncate {
@@ -6132,6 +6129,9 @@ label {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.stack-display {
-  margin-bottom: 30px;
+.stack-display:nth-of-type(2n + 1) .row {
+  background-color: #efefef;
+}
+.tooltip {
+  word-break: break-all;
 }

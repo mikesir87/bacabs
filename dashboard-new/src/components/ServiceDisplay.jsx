@@ -4,14 +4,24 @@ import Col from "react-bootstrap/es/Col";
 import Row from "react-bootstrap/es/Row";
 import ServiceStatusIcon from "./ServiceStatusIcon";
 import {Fragment} from "react";
+import Tooltip from "react-bootstrap/es/Tooltip";
+import OverlayTrigger from "react-bootstrap/es/OverlayTrigger";
 
 class ServiceDisplay extends React.Component {
+
+  displayTooltip = (service) => (
+    <Tooltip id={"tooltip"}>
+      { service.image }
+    </Tooltip>
+  );
+
   render() {
-    const { service } = this.props;
+    const { stackName, service } = this.props;
 
     return (
       <Row>
-        <Col sm={3}>
+        <Col sm={2}><strong>{ stackName }</strong></Col>
+        <Col sm={2}>
           <a href={service.labels["deployment.url"]}>{ service.labels["deployment.name"] }</a>
         </Col>
         <Col sm={2}>
@@ -27,8 +37,10 @@ class ServiceDisplay extends React.Component {
           <ServiceStatusIcon status={service.status} numReplicas={service.replicas} numRunning={service.runningTasks} />&nbsp;
           { service.runningTasks }/{ service.replicas }
         </Col>
-        <Col sm={3} className={"truncate"}>
-          <span title={service.image}>{ service.image }</span>
+        <Col sm={4} className={"truncate"}>
+          <OverlayTrigger placement={"left"} overlay={this.displayTooltip(service)}>
+            <span>{ service.image }</span>
+          </OverlayTrigger>
         </Col>
       </Row>
     );
@@ -36,6 +48,7 @@ class ServiceDisplay extends React.Component {
 }
 
 ServiceDisplay.propTypes = {
+  stackName : PropTypes.string,
   service : PropTypes.object.isRequired,
 };
 
